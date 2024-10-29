@@ -10,16 +10,26 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
-from pathlib import Path
-
 import os
+from pathlib import Path
 from dotenv import load_dotenv
 
-load_dotenv()
+# Define the base directory
+BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load the .env file with an absolute path
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
+# Fetch the variables
 SPOTIFY_CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
 SPOTIFY_CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
 SPOTIFY_REDIRECT_URI = os.getenv("SPOTIFY_REDIRECT_URI")
+
+# Check if variables are loaded
+print("SPOTIFY_CLIENT_ID in settings:", SPOTIFY_CLIENT_ID)
+print("SPOTIFY_REDIRECT_URI in settings:", SPOTIFY_REDIRECT_URI)
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
