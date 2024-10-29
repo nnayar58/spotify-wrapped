@@ -10,6 +10,9 @@ import json
 from datetime import datetime, timedelta
 from .models import SpotifyUser, SpotifyWrap
 
+def home(request):
+    return render(request, 'home.html')
+
 def spotify_login(request):
     scope = 'user-read-private user-read-email user-top-read user-read-recently-played'
     auth_url = f'https://accounts.spotify.com/authorize'

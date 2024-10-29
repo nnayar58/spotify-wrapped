@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', home, name='home'),
     path('auth/spotify/login/', views.spotify_login, name='spotify_login'),
     path('auth/spotify/callback/', views.spotify_callback, name='spotify_callback'),
     path('auth/refresh-token/', views.refresh_token, name='refresh_token'),
