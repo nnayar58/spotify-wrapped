@@ -21,9 +21,6 @@ def home(request):
 
 # Spotify Login Redirect
 def spotify_login(request):
-    # Print statements to verify the environment variable values
-    print("Redirect URI:", settings.SPOTIFY_REDIRECT_URI)
-    print("Client ID:", settings.SPOTIFY_CLIENT_ID)
 
     auth_url = "https://accounts.spotify.com/authorize"
     params = {
