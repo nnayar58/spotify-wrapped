@@ -1,0 +1,22 @@
+# Django web framework
+Django==5.1
+
+# Requests library for making HTTP requests to the Spotify API
+requests==2.31.0
+
+# Spotipy library for accessing the Spotify API (if needed)
+spotipy==2.21.0
+
+# Python-dotenv for loading environment variables from a .env file
+python-dotenv==1.0.0
+
+# Dateutil for parsing dates (if not included in standard library)
+python-dateutil==2.8.2
+
+# Collection for Counter functionality (part of the standard library)
+# No need to include in requirements
+
+# (Optional) CORS headers if needed for Cross-Origin Resource Sharing
+# djangorestframework-corsheaders==3.13.0
+
+# (Optional) Add any other libraries you are using in your project
