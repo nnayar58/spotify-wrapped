@@ -74,7 +74,7 @@ ROOT_URLCONF = 'spotify.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'spotify_app' / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
