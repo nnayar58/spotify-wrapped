@@ -33,6 +33,7 @@ def spotify_login(request):
     return redirect(url)
 
 # Spotify Callback to Handle OAuth Redirect
+# Spotify Callback to Handle OAuth Redirect
 def spotify_callback(request):
     code = request.GET.get('code')
     token_url = "https://accounts.spotify.com/api/token"
@@ -46,7 +47,9 @@ def spotify_callback(request):
     response = requests.post(token_url, data=data)
     token_info = response.json()
     request.session['access_token'] = token_info['access_token']
-    return redirect("spotify_app:spotify_summary")
+
+    # Redirect to the first page in the sequence (top_genres)
+    return redirect("spotify_app:top_genres")
 
 # Helper function to get Spotify data
 def get_spotify_data(url, access_token):
@@ -125,3 +128,54 @@ def spotify_summary(request):
 
     return render(request, 'spotify_app/spotify_summary.html', context)
 
+# Define each new view function for different pages in the flow
+
+# Top Genres Page
+def top_genres(request):
+    access_token = request.session.get('access_token')
+    if not access_token:
+        return redirect("spotify_app:spotify_login")
+    top_genres = get_top_genres(access_token)
+    return render(request, 'spotify_app/top_genres.html', {'top_genres': top_genres})
+
+# Top Artists Page
+def top_artists(request):
+    access_token = request.session.get('access_token')
+    if not access_token:
+        return redirect("spotify_app:spotify_login")
+    top_artists = get_top_artists(access_token)
+    return render(request, 'spotify_app/top_artists.html', {'top_artists': top_artists})
+
+# Top Songs Page
+def top_tracks(request):
+    access_token = request.session.get('access_token')
+    if not access_token:
+        return redirect("spotify_app:spotify_login")
+    top_tracks = get_top_tracks(access_token)
+    return render(request, 'spotify_app/top_tracks.html', {'top_tracks': top_tracks})
+
+# Listening Habits Page
+def listening_habits(request):
+    access_token = request.session.get('access_token')
+    if not access_token:
+        return redirect("spotify_app:spotify_login")
+    total_listening_time = get_total_listening_time(access_token)
+    peak_listening_day = get_peak_listening_day(access_token)
+    return render(request, 'spotify_app/listening_habits.html', {
+        'total_listening_time': total_listening_time,
+        'peak_listening_day': peak_listening_day,
+    })
+
+# Final Summary Page
+def final_summary(request):
+    access_token = request.session.get('access_token')
+    if not access_token:
+        return redirect("spotify_app:spotify_login")
+    context = {
+        "top_artists": get_top_artists(access_token),
+        "top_tracks": get_top_tracks(access_token),
+        "top_genres": get_top_genres(access_token),
+        "total_listening_time": get_total_listening_time(access_token),
+        "peak_listening_day": get_peak_listening_day(access_token),
+    }
+    return render(request, 'spotify_app/final_summary.html', context)
