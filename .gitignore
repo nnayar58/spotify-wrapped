@@ -1,8 +1,11 @@
 # Ignore environment variables file
 .env
+<<<<<<< HEAD
 # Ignore database file
 db.sqlite3
 
 # Ignore Python bytecode files
 __pycache__/
 *.pyc
+=======
+>>>>>>> 316b31b057948c3cdce7fed3bcff991bbd49d40a
