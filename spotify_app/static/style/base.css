@@ -1,0 +1,98 @@
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    color: #FFFFFF;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Specific Background Colors for Each Page */
+body.top-genres {
+    background-color: #1a1a1a; /* Dark gray for genres */
+}
+
+body.top-artists {
+    background-color: #2d2d2d; /* Slightly lighter gray for artists */
+}
+
+body.top-tracks {
+    background-color: #3a3a3a; /* Lighter gray for tracks */
+}
+
+/* Centered Container */
+.container {
+    max-width: 800px;
+    width: 90%;
+    padding: 20px;
+    margin: auto;
+    text-align: center;
+}
+
+/* Typography */
+h1 {
+    font-size: 2.5rem;
+    color: #1DB954; /* Spotify green */
+    margin-bottom: 20px;
+}
+
+ul {
+    list-style-type: none;
+    margin-top: 20px;
+}
+
+ul li {
+    background-color: #333;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+}
+
+ul li:hover {
+    background-color: #1DB954;
+}
+
+/* Button Styling */
+.btn-next {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-top: 20px;
+    background-color: #1DB954;
+    color: #fff;
+    border-radius: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.btn-next:hover {
+    background-color: #17a847;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2rem;
+    }
+    ul li {
+        font-size: 1rem;
+    }
+    .btn-next {
+        font-size: 1em;
+        padding: 8px 16px;
+    }
+}
