@@ -16,6 +16,11 @@ import requests
 from collections import Counter
 from datetime import datetime
 
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import SignUpForm
+
 def home(request):
     return render(request, 'spotify_app/home.html')
 
@@ -125,3 +130,82 @@ def spotify_summary(request):
 
     return render(request, 'spotify_app/spotify_summary.html', context)
 
+<<<<<<< Updated upstream
+=======
+# Define each new view function for different pages in the flow
+
+# Top Genres Page
+def top_genres(request):
+    access_token = request.session.get('access_token')
+    if not access_token:
+        return redirect("spotify_app:spotify_login")
+    top_genres = get_top_genres(access_token)
+    return render(request, 'spotify_app/top_genres.html', {'top_genres': top_genres})
+
+# Top Artists Page
+def top_artists(request):
+    access_token = request.session.get('access_token')
+    if not access_token:
+        return redirect("spotify_app:spotify_login")
+    top_artists = get_top_artists(access_token)
+    return render(request, 'spotify_app/top_artists.html', {'top_artists': top_artists})
+
+# Top Songs Page
+def top_tracks(request):
+    access_token = request.session.get('access_token')
+    if not access_token:
+        return redirect("spotify_app:spotify_login")
+    top_tracks = get_top_tracks(access_token)
+    return render(request, 'spotify_app/top_tracks.html', {'top_tracks': top_tracks})
+
+# Listening Habits Page
+def listening_habits(request):
+    access_token = request.session.get('access_token')
+    if not access_token:
+        return redirect("spotify_app:spotify_login")
+    total_listening_time = get_total_listening_time(access_token)
+    peak_listening_day = get_peak_listening_day(access_token)
+    return render(request, 'spotify_app/listening_habits.html', {
+        'total_listening_time': total_listening_time,
+        'peak_listening_day': peak_listening_day,
+    })
+
+# Final Summary Page
+def final_summary(request):
+    access_token = request.session.get('access_token')
+    if not access_token:
+        return redirect("spotify_app:spotify_login")
+    context = {
+        "top_artists": get_top_artists(access_token),
+        "top_tracks": get_top_tracks(access_token),
+        "top_genres": get_top_genres(access_token),
+        "total_listening_time": get_total_listening_time(access_token),
+        "peak_listening_day": get_peak_listening_day(access_token),
+    }
+    return render(request, 'spotify_app/final_summary.html', context)
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('spotify_app:home')
+    else:
+        form = SignUpForm()
+    return render(request, 'spotify_app/signup.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('spotify_app:home')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'spotify_app/login.html', {'form': form})
+>>>>>>> Stashed changes
