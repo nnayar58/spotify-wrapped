@@ -130,60 +130,6 @@ def spotify_summary(request):
 
     return render(request, 'spotify_app/spotify_summary.html', context)
 
-<<<<<<< Updated upstream
-=======
-# Define each new view function for different pages in the flow
-
-# Top Genres Page
-def top_genres(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
-    top_genres = get_top_genres(access_token)
-    return render(request, 'spotify_app/top_genres.html', {'top_genres': top_genres})
-
-# Top Artists Page
-def top_artists(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
-    top_artists = get_top_artists(access_token)
-    return render(request, 'spotify_app/top_artists.html', {'top_artists': top_artists})
-
-# Top Songs Page
-def top_tracks(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
-    top_tracks = get_top_tracks(access_token)
-    return render(request, 'spotify_app/top_tracks.html', {'top_tracks': top_tracks})
-
-# Listening Habits Page
-def listening_habits(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
-    total_listening_time = get_total_listening_time(access_token)
-    peak_listening_day = get_peak_listening_day(access_token)
-    return render(request, 'spotify_app/listening_habits.html', {
-        'total_listening_time': total_listening_time,
-        'peak_listening_day': peak_listening_day,
-    })
-
-# Final Summary Page
-def final_summary(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
-    context = {
-        "top_artists": get_top_artists(access_token),
-        "top_tracks": get_top_tracks(access_token),
-        "top_genres": get_top_genres(access_token),
-        "total_listening_time": get_total_listening_time(access_token),
-        "peak_listening_day": get_peak_listening_day(access_token),
-    }
-    return render(request, 'spotify_app/final_summary.html', context)
-
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
@@ -208,4 +154,3 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'spotify_app/login.html', {'form': form})
->>>>>>> Stashed changes

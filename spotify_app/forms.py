@@ -8,3 +8,11 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add custom styling to form fields
+        for field in self.fields.values():
+            field.widget.attrs.update({
+                'class': 'w-full p-2 border border-gray-300 rounded focus:outline-none focus:border-green-500'
+            })
