@@ -55,7 +55,22 @@ def spotify_callback(request):
 def get_spotify_data(url, access_token):
     headers = {"Authorization": f"Bearer {access_token}"}
     response = requests.get(url, headers=headers)
-    return response.json()
+    try:
+        # Check if response is valid JSON
+        response.raise_for_status()  # Raise error for non-200 responses
+        data = response.json()       # Parse JSON response
+    except requests.exceptions.HTTPError as http_err:
+        print("HTTP error occurred:", http_err)  # Status code not 200
+        data = {}  # Fallback or custom handling
+    except requests.exceptions.RequestException as req_err:
+        print("Request error occurred:", req_err)  # General network error
+        data = {}
+    except ValueError:
+        print("Response was not JSON:", response.content)  # Response not JSON
+        data = {}
+
+    return data
+
 
 # Function to get top artists, top songs, genres, listening time, and peak day
 def get_top_artists(access_token):
