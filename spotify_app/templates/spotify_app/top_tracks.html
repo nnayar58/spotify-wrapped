@@ -7,6 +7,8 @@
     <li>{{ track }}</li>
     {% endfor %}
 </ul>
+<a href="{% url 'spotify_app:top_artists' %}" class="btn-prev">Previous</a>
+
 <a href="{% url 'spotify_app:listening_habits' %}" class="btn-next">Next</a>
 </body>
 {% endblock %}

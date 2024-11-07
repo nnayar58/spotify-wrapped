@@ -22,4 +22,9 @@
 </ul>
 <p>Total Listening Time: {{ total_listening_time }} hours</p>
 <p>Peak Listening Day: {{ peak_listening_day }}</p>
+
+<a href="{% url 'spotify_app:listening_habits' %}" class="btn-prev">Previous</a>
+
+<!-- Next Button -->
+<a href="{% url 'spotify_app:home' %}" class="btn-next">Home</a>
 {% endblock %}

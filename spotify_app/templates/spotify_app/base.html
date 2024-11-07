@@ -8,8 +8,32 @@
     <link rel="stylesheet" href="{% static 'style/base.css' %}">
 </head>
 <body>
-    {% block content %}
-    <!-- Content goes here -->
-    {% endblock %}
+    <div class="page">
+        {% block content %}
+        <!-- Content goes here -->
+        {% endblock %}
+    </div>
+
+    <script>
+        // Wait for the document to be fully loaded
+        document.addEventListener("DOMContentLoaded", function() {
+            // Add the fade-in class to body to trigger fade-in effect
+            document.body.classList.add('fade-in');
+
+            const nextButton = document.querySelector('.btn-next');
+            if (nextButton) {
+                nextButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const currentPage = document.querySelector('.page');
+                    currentPage.classList.add('slide-up');  // Slide current page up
+
+                    // Wait for the slide-up animation to finish before navigating
+                    setTimeout(function() {
+                        window.location.href = nextButton.href; // Navigate to the next page
+                    }, 500); // Match the duration of the animation
+                });
+            }
+        });
+    </script>
 </body>
 </html>

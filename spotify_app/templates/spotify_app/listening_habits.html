@@ -52,5 +52,9 @@
     <p>Peak Listening Day: {{ peak_listening_day }}</p>
 </div>
 
+<a href="{% url 'spotify_app:top_tracks' %}" class="btn-prev">Previous</a>
+
 <a href="{% url 'spotify_app:final_summary' %}" class="btn-next">Next</a>
+
+
 {% endblock %}
