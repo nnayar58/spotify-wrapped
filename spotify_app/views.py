@@ -20,6 +20,7 @@ from django.contrib.auth import login, authenticate
 from django.shortcuts import render, redirect
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import SignUpForm
+from django.contrib.auth import logout
 
 def home(request):
     return render(request, 'spotify_app/home.html')
@@ -154,3 +155,54 @@ def login_view(request):
     else:
         form = AuthenticationForm()
     return render(request, 'spotify_app/login.html', {'form': form})
+
+def login_view2(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('spotify_app:profile')  # Changed to redirect to profile
+            else:
+                form.add_error(None, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+    return render(request, 'spotify_app/login2.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('spotify_app:home')
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def profile_view(request):
+    user = request.user
+    spotify_connected = 'access_token' in request.session
+    
+    context = {
+        'user': user,
+        'spotify_connected': spotify_connected,
+        'date_joined': user.date_joined,
+    }
+    
+    if spotify_connected:
+        # Get some Spotify data for the profile if available
+        access_token = request.session['access_token']
+        try:
+            top_artists = get_top_artists(access_token)[:3]  # Get top 3 artists
+            top_tracks = get_top_tracks(access_token)[:3]    # Get top 3 tracks
+            top_genres = get_top_genres(access_token)[:3]    # Get top 3 genres
+            
+            context.update({
+                'top_artists': top_artists,
+                'top_tracks': top_tracks,
+                'top_genres': top_genres,
+            })
+        except:
+            pass  # Handle any API errors gracefully
+            
+    return render(request, 'spotify_app/profile.html', context)

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Spotify Wrapped</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-black min-h-screen font-['Montserrat']">
+    <!-- Navigation -->
+    <nav class="bg-black bg-opacity-95 fixed top-0 w-full z-50 px-6 py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="{% url 'spotify_app:home' %}" class="text-white text-2xl font-bold flex items-center">
+                <span class="text-green-500">Spotify</span>&nbsp;Wrapped
+            </a>
+            <div class="flex items-center space-x-6">
+                <a href="{% url 'spotify_app:logout' %}" 
+                   class="text-white hover:text-green-500 transition-colors duration-300">
+                    Logout
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Profile Content -->
+    <main class="pt-24 px-6">
+        <div class="container mx-auto max-w-4xl">
+            <!-- Profile Header -->
+            <div class="bg-gray-900 rounded-xl p-8 mb-8">
+                <div class="flex items-center space-x-6">
+                    <div class="bg-green-500 rounded-full w-24 h-24 flex items-center justify-center">
+                        <span class="text-4xl">{{ user.username|make_list|first|upper }}</span>
+                    </div>
+                    <div>
+                        <h1 class="text-3xl font-bold text-white mb-2">{{ user.username }}</h1>
+                        <p class="text-gray-400">Member since {{ user.date_joined|date:"F Y" }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Spotify Connection Status -->
+            <div class="bg-gray-900 rounded-xl p-8 mb-8">
+                <h2 class="text-xl font-semibold text-white mb-4">Spotify Connection</h2>
+                {% if spotify_connected %}
+                    <div class="flex items-center text-green-500">
+                        <svg class="w-6 h-6 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                        </svg>
+                        Connected to Spotify
+                    </div>
+                {% else %}
+                    <div class="flex flex-col space-y-4">
+                        <div class="text-yellow-500">Not connected to Spotify</div>
+                        <a href="{% url 'spotify_app:spotify_login' %}" 
+                           class="inline-block bg-green-500 text-white px-6 py-2 rounded-full hover:bg-green-600 transition-colors duration-300 text-center w-fit">
+                            Connect Spotify
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Music Overview -->
+            {% if spotify_connected and top_artists %}
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Top Artists -->
+                <div class="bg-gray-900 rounded-xl p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Top Artists</h3>
+                    <ul class="space-y-3">
+                        {% for artist in top_artists %}
+                        <li class="text-gray-300">{{ artist }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Top Tracks -->
+                <div class="bg-gray-900 rounded-xl p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Top Tracks</h3>
+                    <ul class="space-y-3">
+                        {% for track in top_tracks %}
+                        <li class="text-gray-300">{{ track }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Top Genres -->
+                <div class="bg-gray-900 rounded-xl p-6">
+                    <h3 class="text-xl font-semibold text-white mb-4">Top Genres</h3>
+                    <ul class="space-y-3">
+                        {% for genre in top_genres %}
+                        <li class="text-gray-300">{{ genre }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- Get Full Stats Button -->
+            {% if spotify_connected %}
+            <div class="mt-8 text-center">
+                <a href="{% url 'spotify_app:spotify_summary' %}" 
+                   class="inline-block bg-green-500 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-green-600 transition-colors duration-300">
+                    View Full Statistics
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>
