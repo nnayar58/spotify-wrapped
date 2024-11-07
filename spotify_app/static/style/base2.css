@@ -158,7 +158,7 @@ ul li:hover {
 .top-genres-container {
     display: flex;
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 85px);
 }
 
 /* Left half for the jazz image */
@@ -172,8 +172,10 @@ ul li:hover {
 
 .genre-image {
     max-width: 100%;
+    min-width: 90%;
     height: auto;
     border-radius: 10px;
+    margin:0px;
 }
 
 /* Right half for the genres list */

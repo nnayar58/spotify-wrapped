@@ -1,17 +1,30 @@
 {% extends "spotify_app/base.html" %}
+{% load static %}
 {% block content %}
 <body class="top-genres">
-<h1>Your Top Genres</h1>
-<ul>
-    {% for genre in top_genres %}
-    <li>{{ genre }}</li>
-    {% endfor %}
-</ul>
+<!-- Header Title -->
+<h1 class="page-title">Your Top Genres</h1>
 
-<!-- Previous Button -->
-<a href="{% url 'spotify_app:home' %}" class="btn-prev">Previous</a>
+<div class="top-genres-container">
+    <!-- Left half with the jazz image -->
+    <div class="left-half">
+        <img src="{% static 'jazz.png' %}" alt="Jazz" class="genre-image">
+    </div>
 
-<!-- Next Button -->
-<a href="{% url 'spotify_app:top_artists' %}" class="btn-next">Next</a>
+    <!-- Right half with the genres list -->
+    <div class="right-half">
+        <ul>
+            {% for genre in top_genres %}
+            <li>{{ genre }}</li>
+            {% endfor %}
+        </ul>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+            <a href="{% url 'spotify_app:home' %}" class="btn-prev">Previous</a>
+            <a href="{% url 'spotify_app:top_artists' %}" class="btn-next">Next</a>
+        </div>
+    </div>
+</div>
 </body>
 {% endblock %}
