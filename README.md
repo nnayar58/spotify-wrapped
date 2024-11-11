@@ -130,7 +130,3 @@ Click "Connect to Spotify" on the home page to authenticate your Spotify account
 
 - All static files are ignored in version control as specified in the `.gitignore` file.
 - The database username and password are standardized for consistency across development environments.
-
-## 🤝 Contributing
-
-If you want to contribute, please fork the repository and create a pull request.
