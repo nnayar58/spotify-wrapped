@@ -15,6 +15,16 @@ import urllib.parse
 import requests
 from collections import Counter
 from datetime import datetime
+from django.utils import timezone
+from datetime import timedelta
+from .models import UserProfile
+
+from django.contrib.auth import login, authenticate
+from django.shortcuts import render, redirect
+from django.contrib.auth.forms import AuthenticationForm
+from .forms import SignUpForm
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 
 def home(request):
     return render(request, 'spotify_app/home.html')
@@ -46,84 +56,111 @@ def spotify_callback(request):
     }
     response = requests.post(token_url, data=data)
     token_info = response.json()
-    request.session['access_token'] = token_info['access_token']
 
-    # Redirect to the first page in the sequence (top_genres)
+    access_token = token_info.get('access_token')
+    refresh_token = token_info.get('refresh_token')
+    expires_in = token_info.get('expires_in')
+    token_expires = timezone.now() + timedelta(seconds=expires_in)
+
+    # Get Spotify user ID
+    user_info_url = "https://api.spotify.com/v1/me"
+    headers = {"Authorization": f"Bearer {access_token}"}
+    user_info_response = requests.get(user_info_url, headers=headers)
+    user_info = user_info_response.json()
+    spotify_user_id = user_info.get('id')
+
+    # Update UserProfile
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+    user_profile.spotify_user_id = spotify_user_id
+    user_profile.access_token = access_token
+    user_profile.refresh_token = refresh_token
+    user_profile.token_expires = token_expires
+    user_profile.save()
+
     return redirect("spotify_app:top_genres")
 
-# Helper function to get Spotify data
-def get_spotify_data(url, access_token):
-    headers = {"Authorization": f"Bearer {access_token}"}
+
+def refresh_access_token(user_profile):
+    token_url = "https://accounts.spotify.com/api/token"
+    data = {
+        "grant_type": "refresh_token",
+        "refresh_token": user_profile.refresh_token,
+        "client_id": settings.SPOTIFY_CLIENT_ID,
+        "client_secret": settings.SPOTIFY_CLIENT_SECRET,
+    }
+    response = requests.post(token_url, data=data)
+    token_info = response.json()
+
+    # Update the access token and expiration time
+    user_profile.access_token = token_info.get('access_token')
+    expires_in = token_info.get('expires_in')
+    user_profile.token_expires = timezone.now() + timedelta(seconds=expires_in)
+    user_profile.save()
+
+def get_spotify_data(url, user_profile):
+    # Refresh the access token if it has expired
+    if timezone.now() >= user_profile.token_expires:
+        refresh_access_token(user_profile)
+
+    headers = {"Authorization": f"Bearer {user_profile.access_token}"}
     response = requests.get(url, headers=headers)
     try:
-        # Check if response is valid JSON
-        response.raise_for_status()  # Raise error for non-200 responses
-        data = response.json()       # Parse JSON response
-    except requests.exceptions.HTTPError as http_err:
-        print("HTTP error occurred:", http_err)  # Status code not 200
-        data = {}  # Fallback or custom handling
-    except requests.exceptions.RequestException as req_err:
-        print("Request error occurred:", req_err)  # General network error
-        data = {}
-    except ValueError:
-        print("Response was not JSON:", response.content)  # Response not JSON
+        response.raise_for_status()
+        data = response.json()
+    except requests.exceptions.RequestException as e:
+        print("Error fetching data:", e)
         data = {}
 
     return data
 
 
+
+
 # Function to get top artists, top songs, genres, listening time, and peak day
-def get_top_artists(access_token):
+def get_top_artists(user_profile):
     url = "https://api.spotify.com/v1/me/top/artists?limit=5&time_range=long_term"
-    data = get_spotify_data(url, access_token)
+    data = get_spotify_data(url, user_profile)
     print("Top Artists Data:", data)  # Debugging line
     return [artist['name'] for artist in data.get('items', [])]
 
-
-def get_top_tracks(access_token):
-    url = "https://api.spotify.com/v1/me/top/tracks?limit=5&time_range=long_term"  # Last 12 months
-    data = get_spotify_data(url, access_token)
+def get_top_tracks(user_profile):
+    url = "https://api.spotify.com/v1/me/top/tracks?limit=5&time_range=long_term"
+    data = get_spotify_data(url, user_profile)
     print("Top Tracks Data:", data)  # Debugging line
     return [track['name'] for track in data.get('items', [])]
 
-def get_top_genres(access_token):
-    url = "https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term"  # Last 12 months
-    data = get_spotify_data(url, access_token)
+def get_top_genres(user_profile):
+    url = "https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term"
+    data = get_spotify_data(url, user_profile)
     genres = [genre for artist in data.get('items', []) for genre in artist['genres']]
     return sorted(set(genres), key=genres.count, reverse=True)[:5]
 
-
-def get_total_listening_time(access_token):
+def get_total_listening_time(user_profile):
     url = "https://api.spotify.com/v1/me/player/recently-played?limit=50"
-    data = get_spotify_data(url, access_token)
+    data = get_spotify_data(url, user_profile)
     total_ms = sum(item['track']['duration_ms'] for item in data.get('items', []))
     total_hours = round(total_ms / (1000 * 60 * 60), 2)
     return total_hours
 
 from dateutil import parser
 
-def get_peak_listening_day(access_token):
+def get_peak_listening_day(user_profile):
     url = "https://api.spotify.com/v1/me/player/recently-played?limit=50"
-    data = get_spotify_data(url, access_token)
-
-    # Use dateutil's parser to handle the ISO 8601 format
+    data = get_spotify_data(url, user_profile)
     days = [parser.isoparse(item['played_at']).strftime('%A') for item in data.get('items', [])]
-    
     return Counter(days).most_common(1)[0][0] if days else None
 
 
 
 # View to display Spotify summary
 def spotify_summary(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
-    
-    top_artists = get_top_artists(access_token)
-    top_tracks = get_top_tracks(access_token)
-    top_genres = get_top_genres(access_token)
-    total_listening_time = get_total_listening_time(access_token)
-    peak_listening_day = get_peak_listening_day(access_token)
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    top_artists = get_top_artists(user_profile)
+    top_tracks = get_top_tracks(user_profile)
+    top_genres = get_top_genres(user_profile)
+    total_listening_time = get_total_listening_time(user_profile)
+    peak_listening_day = get_peak_listening_day(user_profile)
 
     context = {
         "top_artists": top_artists,
@@ -133,64 +170,121 @@ def spotify_summary(request):
         "peak_listening_day": peak_listening_day,
     }
 
-    # Check for empty results
-    if not top_artists:
-        context["no_top_artists"] = "You don't have any top artists."
-    if not top_tracks:
-        context["no_top_tracks"] = "You don't have any top tracks."
-    if not top_genres:
-        context["no_top_genres"] = "You don't have any top genres."
-
     return render(request, 'spotify_app/spotify_summary.html', context)
 
-# Define each new view function for different pages in the flow
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect('spotify_app:home')
+    else:
+        form = SignUpForm()
+    return render(request, 'spotify_app/signup.html', {'form': form})
+
+def login_view(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('spotify_app:home')
+    else:
+        form = AuthenticationForm()
+    return render(request, 'spotify_app/login.html', {'form': form})
+
+def login_view2(request):
+    if request.method == 'POST':
+        form = AuthenticationForm(request, data=request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('spotify_app:profile')  # Changed to redirect to profile
+            else:
+                form.add_error(None, "Invalid username or password.")
+    else:
+        form = AuthenticationForm()
+    return render(request, 'spotify_app/login2.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect('spotify_app:home')
+
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def profile_view(request):
+    user = request.user
+    spotify_connected = is_spotify_connected(user)
+
+    context = {
+        'user': user,
+        'spotify_connected': spotify_connected,
+        'date_joined': user.date_joined,
+    }
+
+    # Do not fetch top artists, tracks, or genres here to avoid spoilers
+
+    return render(request, 'spotify_app/profile.html', context)
+
+
 
 # Top Genres Page
+@login_required
 def top_genres(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
-    top_genres = get_top_genres(access_token)
+    user_profile = UserProfile.objects.get(user=request.user)
+    top_genres = get_top_genres(user_profile)
     return render(request, 'spotify_app/top_genres.html', {'top_genres': top_genres})
 
-# Top Artists Page
+@login_required
 def top_artists(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
-    top_artists = get_top_artists(access_token)
+    user_profile = UserProfile.objects.get(user=request.user)
+    top_artists = get_top_artists(user_profile)
     return render(request, 'spotify_app/top_artists.html', {'top_artists': top_artists})
 
-# Top Songs Page
+@login_required
 def top_tracks(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
-    top_tracks = get_top_tracks(access_token)
+    user_profile = UserProfile.objects.get(user=request.user)
+    top_tracks = get_top_tracks(user_profile)
     return render(request, 'spotify_app/top_tracks.html', {'top_tracks': top_tracks})
 
-# Listening Habits Page
+@login_required
 def listening_habits(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
-    total_listening_time = get_total_listening_time(access_token)
-    peak_listening_day = get_peak_listening_day(access_token)
+    user_profile = UserProfile.objects.get(user=request.user)
+    total_listening_time = get_total_listening_time(user_profile)
+    peak_listening_day = get_peak_listening_day(user_profile)
     return render(request, 'spotify_app/listening_habits.html', {
         'total_listening_time': total_listening_time,
         'peak_listening_day': peak_listening_day,
     })
 
 # Final Summary Page
+@login_required
 def final_summary(request):
-    access_token = request.session.get('access_token')
-    if not access_token:
-        return redirect("spotify_app:spotify_login")
+    user_profile = UserProfile.objects.get(user=request.user)
+
     context = {
-        "top_artists": get_top_artists(access_token),
-        "top_tracks": get_top_tracks(access_token),
-        "top_genres": get_top_genres(access_token),
-        "total_listening_time": get_total_listening_time(access_token),
-        "peak_listening_day": get_peak_listening_day(access_token),
+        "top_artists": get_top_artists(user_profile),
+        "top_tracks": get_top_tracks(user_profile),
+        "top_genres": get_top_genres(user_profile),
+        "total_listening_time": get_total_listening_time(user_profile),
+        "peak_listening_day": get_peak_listening_day(user_profile),
     }
     return render(request, 'spotify_app/final_summary.html', context)
+
+def is_spotify_connected(user):
+    try:
+        user_profile = UserProfile.objects.get(user=user)
+        # Check if access_token and refresh_token are present
+        return bool(user_profile.access_token and user_profile.refresh_token)
+    except UserProfile.DoesNotExist:
+        return False

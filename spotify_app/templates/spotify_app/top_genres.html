@@ -1,12 +1,15 @@
 {% extends "spotify_app/base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'style/base.css' %}">
+
 {% block content %}
-<body class="top-genres">
-<h1>Your Top Genres</h1>
-<ul>
-    {% for genre in top_genres %}
-    <li>{{ genre }}</li>
-    {% endfor %}
-</ul>
-<a href="{% url 'spotify_app:top_artists' %}" class="btn-next">Next</a>
+<body class="top-genres fade-in">
+    <h1>Your Top Genres</h1>
+    <ul>
+        {% for genre in top_genres %}
+        <li>{{ genre }}</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'spotify_app:top_artists' %}" class="btn-next">Next</a>
 </body>
 {% endblock %}

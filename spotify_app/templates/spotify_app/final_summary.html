@@ -1,25 +1,35 @@
 {% extends "spotify_app/base.html" %}
-
+{% load static %}
+<link rel="stylesheet" href="{% static 'style/base.css' %}">
 {% block content %}
 <h1>Your Spotify Year in Review</h1>
+
 <h2>Top Artists</h2>
 <ul>
     {% for artist in top_artists %}
         <li>{{ artist }}</li>
     {% endfor %}
 </ul>
+
 <h2>Top Tracks</h2>
 <ul>
     {% for track in top_tracks %}
         <li>{{ track }}</li>
     {% endfor %}
 </ul>
+
 <h2>Top Genres</h2>
 <ul>
     {% for genre in top_genres %}
         <li>{{ genre }}</li>
     {% endfor %}
 </ul>
+
 <p>Total Listening Time: {{ total_listening_time }} hours</p>
 <p>Peak Listening Day: {{ peak_listening_day }}</p>
+
+<div class="button-container">
+    <a href="{% url 'spotify_app:listening_habits' %}" class="btn-next">Previous</a>
+    <a href="{% url 'spotify_app:profile' %}" class="btn-next">Finish</a>
+</div>
 {% endblock %}

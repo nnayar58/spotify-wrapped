@@ -1,12 +1,11 @@
 {% extends "spotify_app/base.html" %}
 {% block content %}
-<body class="top-tracks">
 <h1>Your Top Tracks</h1>
 <ul>
     {% for track in top_tracks %}
     <li>{{ track }}</li>
     {% endfor %}
 </ul>
+<a href="{% url 'spotify_app:top_artists' %}" class="btn-next">Previous</a>
 <a href="{% url 'spotify_app:listening_habits' %}" class="btn-next">Next</a>
-</body>
 {% endblock %}

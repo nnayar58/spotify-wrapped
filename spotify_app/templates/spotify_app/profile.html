@@ -1,0 +1,42 @@
+{% extends "spotify_app/base.html" %}
+
+{% block content %}
+<div class="profile-container">
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-icon">
+            <span>{{ user.username|make_list|first|upper }}</span>
+        </div>
+        <div class="profile-info">
+            <h1>{{ user.username }}</h1>
+            <p>Member since {{ user.date_joined|date:"F Y" }}</p>
+        </div>
+    </div>
+
+    <!-- Spotify Connection Status -->
+    <div class="connection-box">
+        <h2>Spotify Connection</h2>
+        {% if spotify_connected %}
+            <div class="status-connected">
+                Connected to Spotify
+            </div>
+        {% else %}
+            <div class="status-not-connected">
+                Not connected to Spotify
+            </div>
+            <a href="{% url 'spotify_app:spotify_login' %}" class="connect-button">
+                Connect Spotify
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Get Full Stats Button -->
+    {% if spotify_connected %}
+    <div class="stats-button-container">
+        <a href="{% url 'spotify_app:top_genres' %}" class="full-stats-button">
+            View Your Wrapped Now!
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

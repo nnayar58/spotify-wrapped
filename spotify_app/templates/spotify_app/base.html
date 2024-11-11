@@ -1,15 +1,56 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}My Spotify App{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'style/base.css' %}">
+    <title>Spotify Wrapped</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% load static %}
+<link rel="stylesheet" href="{% static 'style/base.css' %}">
+
 </head>
 <body>
-    {% block content %}
-    <!-- Content goes here -->
-    {% endblock %}
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'spotify_app:home' %}" class="logo">
+                <span class="logo-green">Spotify</span> Wrapped
+            </a>
+            <div class="nav-menu">
+                <button id="profileButton" class="nav-button">
+                    <span>Menu</span>
+                    <svg class="icon" viewBox="0 0 20 20">
+                        <path d="M10 2a8 8 0 110 16 8 8 0 010-16z"/>
+                    </svg>
+                </button>
+                <div id="dropdownMenu" class="dropdown-menu">
+                    <a href="{% url 'spotify_app:profile' %}" class="dropdown-item">Profile</a>
+                    <a href="{% url 'spotify_app:logout' %}" class="dropdown-item">Logout</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- JavaScript for Dropdown Menu -->
+    <script>
+        const profileButton = document.getElementById('profileButton');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+
+        profileButton.addEventListener('click', () => {
+            dropdownMenu.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!profileButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('show');
+            }
+        });
+    </script>
 </body>
 </html>

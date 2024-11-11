@@ -44,7 +44,8 @@ SECRET_KEY = 'django-insecure-&lu)z=wf*=!#s_a1vk0t-=71e0e=*kf5sg6m47y(fu#hi7tv_!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
 
 
 # Application definition
@@ -95,10 +96,15 @@ WSGI_APPLICATION = 'spotify.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'rohitgogi',  # Your new database name
+        'USER': 'rohitgogi',  # Your PostgreSQL username
+        'PASSWORD': 'this_is_password123',  # Your PostgreSQL password
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
 
 
 # Password validation
@@ -140,6 +146,10 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "spotify_app" / "static",
 ]
+
+# Static root for collectstatic
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
