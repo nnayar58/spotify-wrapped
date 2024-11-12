@@ -301,11 +301,11 @@ def contact_developers(request):
     else:
         form = FeedbackForm()
     team_info = [
-        {"name": "Rohit Gogi", "role": "Scrum Master"},
-        {"name": "Kelly Zhou", "role": "Product Owner"},
-        {"name": "Shefali Sharma", "role": "Full-Stack Developer"},
-        {"name": "Neel Nayar", "role": "Backend Developer"},
-        {"name": "Anh-Duy Ha", "role": "Frontend Developer"},
+        {"name": "Rohit Gogi", "role": "Scrum Master", "image": "rohit.png"},
+        {"name": "Kelly Zhou", "role": "Product Owner", "image": "kelly.png"},
+        {"name": "Shefali Sharma", "role": "Full-Stack Developer", "image": "shefali.jpg"},
+        {"name": "Neel Nayar", "role": "Backend Developer", "image": "neel.png"},
+        {"name": "Anh-Duy Ha", "role": "Frontend Developer", "image": "andy.png"},
     ]
     return render(request, 'spotify_app/contact_developers.html', {'form': form, 'team_info': team_info})
 
