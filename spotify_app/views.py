@@ -25,6 +25,9 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import SignUpForm
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
+from .forms import FeedbackForm
+from .models import Feedback
+
 
 def home(request):
     return render(request, 'spotify_app/home.html')
@@ -288,3 +291,32 @@ def is_spotify_connected(user):
         return bool(user_profile.access_token and user_profile.refresh_token)
     except UserProfile.DoesNotExist:
         return False
+
+def contact_developers(request):
+    if request.method == 'POST':
+        form = FeedbackForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('spotify_app:feedback_success')  # Create a success page or message
+    else:
+        form = FeedbackForm()
+    team_info = [
+        {"name": "Rohit Gogi", "role": "Scrum Master"},
+        {"name": "Kelly Zhou", "role": "Product Owner"},
+        {"name": "Shefali Sharma", "role": "Full-Stack Developer"},
+        {"name": "Neel Nayar", "role": "Backend Developer"},
+        {"name": "Anh-Duy Ha", "role": "Frontend Developer"},
+    ]
+    return render(request, 'spotify_app/contact_developers.html', {'form': form, 'team_info': team_info})
+
+
+def view_feedback(request):
+    feedback_list = Feedback.objects.all()
+    if request.method == 'POST' and 'clear_all' in request.POST:
+        Feedback.objects.all().delete()  # Delete all feedback
+        return redirect('spotify_app:view_feedback')  # Redirect to the same page to refresh the list
+    return render(request, 'spotify_app/view_feedback.html', {'feedback_list': feedback_list})
+
+
+def feedback_success(request):
+    return render(request, 'spotify_app/feedback_success.html')

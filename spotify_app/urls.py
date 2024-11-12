@@ -21,4 +21,7 @@ urlpatterns = [
     path('top-tracks/', views.top_tracks, name='top_tracks'),
     path('listening-habits/', views.listening_habits, name='listening_habits'),
     path('final-summary/', views.final_summary, name='final_summary'),
+    path('contact/', views.contact_developers, name='contact_developers'),
+    path('view-feedback/', views.view_feedback, name='view_feedback'),
+    path('feedback_success/', views.feedback_success, name='feedback_success'),
 ]
