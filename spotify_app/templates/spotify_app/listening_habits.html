@@ -1,0 +1,15 @@
+{% extends "spotify_app/base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'style/base.css' %}">
+
+{% block content %}
+<h1>Your Listening Habits</h1>
+
+<p>Total Listening Time: {{ total_listening_time }} hours</p>
+<p>Peak Listening Day: {{ peak_listening_day }}</p>
+
+<div class="button-container">
+    <a href="{% url 'spotify_app:top_tracks' %}" class="btn-next">Previous</a>
+    <a href="{% url 'spotify_app:final_summary' %}" class="btn-next">Next</a>
+</div>
+{% endblock %}

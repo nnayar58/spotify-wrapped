@@ -1,0 +1,13 @@
+asgiref==3.8.1
+certifi==2024.8.30
+charset-normalizer==3.4.0
+Django==5.1
+idna==3.10
+python-dateutil==2.8.2
+python-dotenv==1.0.0
+redis==5.2.0
+requests==2.31.0
+six==1.16.0
+spotipy==2.21.0
+sqlparse==0.5.1
+urllib3==2.2.3

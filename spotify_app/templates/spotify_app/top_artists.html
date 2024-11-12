@@ -1,0 +1,17 @@
+{% extends "spotify_app/base.html" %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'style/base.css' %}">
+
+{% block content %}
+<h1>Your Top Artists</h1>
+<ul>
+    {% for artist in top_artists %}
+        <li>{{ artist }}</li>
+    {% endfor %}
+</ul>
+
+<div class="button-container">
+    <a href="{% url 'spotify_app:top_genres' %}" class="btn-next">Previous</a>
+    <a href="{% url 'spotify_app:top_tracks' %}" class="btn-next">Next</a>
+</div>
+{% endblock %}
