@@ -1,11 +1,57 @@
 {% extends "spotify_app/base.html" %}
 {% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'style/mobile.css' %}">
+<body class="top-tracks">
+<video class="video-background" autoplay loop muted playsinline>
+    <source src="{% static 'videos\bluewave.mp4' %}" type="video/mp4">
+</video>
+
 <h1>Your Top Tracks</h1>
-<ul>
-    {% for track in top_tracks %}
-    <li>{{ track }}</li>
-    {% endfor %}
-</ul>
-<a href="{% url 'spotify_app:top_artists' %}" class="btn-next">Previous</a>
+
+<div class="top-1" id="top-1">
+    {% if top_tracks %}
+    <ul>
+        <li2>
+            <img class="top-image" src="{{ top_tracks.0.image_url }}" alt="{{ top_tracks.0.name }}" style="width: 400px; height: 400px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2)">
+            <div><span style="text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);">#1<br>{{ top_tracks.0.name }}<span style="font-size: 0.9em; font-weight:100;"> - {{ top_tracks.0.artist }}</span></span></div>
+        </li2>
+    </ul>
+    {% endif %}
+    <button class="btn-top-5" id="top5Btn">Show Top 5 Tracks</button>
+</div>
+
+<div class="top-5" id="top-5" style="display: none;">
+    <div class="left-half">
+        <ul>
+            <li2>
+                <img class="top-image" src="{{ top_tracks.0.image_url }}" alt="{{ top_tracks.0.name }}" style="width: 500px; height: 500px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2)">
+                <div class="top-name">#1. {{ top_tracks.0.name }}<span style="font-size: 0.9em; font-weight:100;"> - {{ top_tracks.0.artist }}</span></div>
+            </li2>
+        </ul>
+    </div>
+    <div class="right-half">
+        <ul>
+            {% for track in top_tracks|slice:"1:5" %}
+            <li>
+                <img src="{{ track.image_url }}" alt="{{ track.name }}" style="width: 100px; height: 100px;;">
+                <div>#{{ forloop.counter|add:1 }}. <span style="font-weight:600;">{{ track.name }}</span><span style="font-size: 0.9em; font-weight:100;"> - {{ track.artist }}</span></div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<a href="{% url 'spotify_app:top_artists' %}" class="btn-prev">Previous</a>
 <a href="{% url 'spotify_app:listening_habits' %}" class="btn-next">Next</a>
+
+<script>
+    document.getElementById("top5Btn").addEventListener("click", function() {
+        // Hide the top-1 section
+        document.getElementById("top-1").style.display = "none";
+
+        // Show the top-5 section
+        document.getElementById("top-5").style.display = "flex";
+    });
+</script>
+</body>
 {% endblock %}

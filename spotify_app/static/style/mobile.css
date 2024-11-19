@@ -1,0 +1,149 @@
+/* Mobile-first Styles */
+@media (max-width: 768px) {
+    .video-background {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    /* Adjust the text in h1 to fit on smaller screens */
+    h1 {
+        font-size: 2rem; /* Adjusted for smaller screens */
+        padding: 10px;
+        text-align: center;
+        font-weight: 600;
+    }
+
+    .top-1 {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        margin-top: -50px;
+    }
+
+    .top-1 ul {
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .top-1 div {
+        font-size: 1.5rem; /* Adjust font size for mobile */
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Button Styling */
+    .btn-top-5 {
+        padding: 10px 15px;
+        font-size: 16px;
+        display: block;
+        margin: 20px auto;
+    }
+
+    /* Adjustments for the top-5 section */
+    .top-5 {
+        flex-direction: column;
+        height: auto; /* Allow height to adjust */
+        max-width: 80vh;
+    }
+
+    .left-half {
+        margin-top: -50px;
+    }
+    .right-half {
+        flex: none; /* Make sections stack on smaller screens */
+        padding: 0;
+        margin: -20px;
+        padding-bottom: 80px;
+    }
+
+    .top-image {
+        max-width: 250px;
+        max-height: 250px;
+    }
+
+    .right-half ul li img {
+        width: 80%; /* Make images responsive */
+        height: auto;
+    }
+
+    .right-half ul li {
+        background-color: rgb(0,0,0,.6);
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        color: #fff;
+        font-size: 1.1rem;
+        transition: background-color 0.3s ease;
+        text-align: center;
+        max-width: 350px;
+    }
+
+    .top-name {
+        font-size: 1.2rem;
+        margin: 10px;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    /* Navigation Button Positioning */
+    .btn-prev,
+    .btn-next {
+        display: inline-block;
+        padding: 8px 16px;
+        background-color: #1DB954;
+        color: #fff;
+        border-radius: 30px;
+        font-size: 1em;
+        font-weight: bold;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        text-transform: uppercase;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Remove excessive margins for smaller screens */
+    ul li,
+    ul li2 {
+        width: 100%; /* Full width for list items */
+        padding: 10px;
+        font-size: 1.2rem;
+        text-align: center;
+    }
+    .navbar {
+        padding: 10px;
+    }
+
+    .nav-button {
+        font-size: 1rem;
+    }
+
+    /* Adjust list item font size */
+    ul li {
+        font-size: 1rem;
+    }
+
+    .top-5 {
+        flex-direction: column;
+    }
+
+    .top-name {
+        font-size: 1.5rem;
+        margin: 5px;
+    }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    /* Button Adjustments */
+    .btn-top-5 {
+        padding: 12px 18px;
+        font-size: 14px;
+        margin-top: -10px;
+    }
+}
