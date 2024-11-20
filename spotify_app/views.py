@@ -141,20 +141,19 @@ def get_top_tracks(access_token):
         {
             'name': track['name'],
             'artist': track['artists'][0]['name'],  # Get the first artist's name
-            'image_url': track['album']['images'][0]['url']  # Get the album image URL
+            'image_url': track['album']['images'][0]['url'],  # Get the album image URL
+            'preview_url': track.get('preview_url')  # Get the preview URL, if available
         }
         for track in data.get('items', [])
     ]
 
-def get_top_genres(access_token):
-    url = "https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term"
-    data = get_spotify_data(url, access_token)
 
+def get_top_genres(access_token):
     genre_mapping = {
         'k-pop girl group': 'k-pop',
         'k-pop boy group': 'k-pop',
         '5th gen k-pop': 'k-pop',
-        'pop rock': 'pop',
+        'pop rock': 'indie',
         'indie pop': 'pop',
         'pop punk': 'pop',
         'dance-pop': 'pop',
@@ -222,51 +221,82 @@ def get_top_genres(access_token):
         'bossa nova': 'latin'
     }
 
-    genres = []
-    for artist in data.get('items', []):
-        for genre in artist['genres']:
-            generalized_genre = genre_mapping.get(genre, genre)
-            genres.append(generalized_genre)
+    genre_images = {
+        "rock": "https://t.scdn.co/media/derived/rock_9ce79e0a4ef901bbd10494f5b855d3cc_0_0_274_274.jpg",
+        "hip-hop": "https://t.scdn.co/images/728ed47fc1674feb95f7ac20236eb6d7.jpeg",
+        "country": "https://t.scdn.co/images/a2e0ebe2ebed4566ba1d8236b869241f.jpeg",
+        "pop": "https://t.scdn.co/media/derived/pop-274x274_447148649685019f5e2a03a39e78ba52_0_0_274_274.jpg",
+        "latin": "https://t.scdn.co/media/derived/latin-274x274_befbbd1fbb8e045491576e317cb16cdf_0_0_274_274.jpg",
+        "dance/electronic": "https://t.scdn.co/media/derived/edm-274x274_0ef612604200a9c14995432994455a6d_0_0_274_274.jpg",
+        "mood": "https://t.scdn.co/media/original/mood-274x274_976986a31ac8c49794cbdc7246fd5ad7_274x274.jpg",
+        "indie": "https://t.scdn.co/images/fe06caf056474bc58862591cd60b57fc.jpeg",
+        "r&b": "https://t.scdn.co/media/derived/r-b-274x274_fd56efa72f4f63764b011b68121581d8_0_0_274_274.jpg",
+        "christian & gospel": "https://t.scdn.co/media/derived/icon-274x274_5ce6e0f681f0a76f9dcf9270dfd18489_0_0_274_274.jpg",
+        "disney": "https://t.scdn.co/images/27922fb7882e4d078c59b29cef4111b9",
+        "música mexicana": "https://t.scdn.co/media/derived/latin-274x274_befbbd1fbb8e045491576e317cb16cdf_0_0_274_274.jpg",
+        "k-pop": "https://t.scdn.co/images/2078afd91e4d431eb19efc5bee5ab131.jpeg",
+        "chill": "https://t.scdn.co/media/derived/chill-274x274_4c46374f007813dd10b37e8d8fd35b4b_0_0_274_274.jpg",
+        "decades": "https://t.scdn.co/images/04111a3b810243288d81a539ba03f8d0",
+        "love": "https://t.scdn.co/media/derived/romance-274x274_8100794c94847b6d27858bed6fa4d91b_0_0_274_274.jpg",
+        "metal": "https://t.scdn.co/media/original/metal_27c921443fd0a5ba95b1b2c2ae654b2b_274x274.jpg",
+        "jazz": "https://t.scdn.co/images/568f37f1cab54136939d63bd1f59d40c",
+        "classical": "https://t.scdn.co/media/derived/classical-274x274_abf78251ff3d90d2ceaf029253ca7cb4_0_0_274_274.jpg",
+        "folk & acoustic": "https://t.scdn.co/images/7fe0f2c9c91f45a3b6bae49d298201a4.jpeg",
+        "focus": "https://t.scdn.co/media/original/genre-images-square-274x274_5e50d72b846a198fcd2ca9b3aef5f0c8_274x274.jpg",
+        "soul": "https://t.scdn.co/media/derived/soul-274x274_266bc900b35dda8956380cffc73a4d8c_0_0_274_274.jpg",
+        "kids & family": "https://t.scdn.co/images/664bb84f7a774e1eadb7c227aed98f3c",
+        "gaming": "https://t.scdn.co/images/0d39395309ba47838ef12ce987f19d16.jpeg",
+        "anime": "https://t.scdn.co/images/54841f7d6a774ef096477c99c23f0cf1.jpeg",
+        "tv & movies": "https://t.scdn.co/images/3be0105e-cc31-4bf2-9958-05568b12370d.jpg",
+        "instrumental": "https://t.scdn.co/images/384c2b595a1648aa801837ff99961188",
+        "punk": "https://t.scdn.co/media/derived/punk-274x274_f3f1528ea7bbb60a625da13e3315a40b_0_0_274_274.jpg",
+        "ambient": "https://t.scdn.co/images/e03887dc75ae48f4bf6503bd894f2b3c",
+        "blues": "https://t.scdn.co/images/6fe5cd3ebc8c4db7bb8013152b153505",
+        "alternative": "https://t.scdn.co/images/ee9451b3ed474c82b1da8f9b5eafc88f.jpeg",
+        "travel": "https://t.scdn.co/media/derived/travel-274x274_1e89cd5b42cf8bd2ff8fc4fb26f2e955_0_0_274_274.jpg",
+        "caribbean": "https://t.scdn.co/images/495fadcefe234607b14b2db3381f3f5d.jpeg",
+        "afro": "https://t.scdn.co/images/b505b01bbe0e490cbe43b07f16212892.jpeg",
+        "bluegrass": "https://t.scdn.co/images/0d39395309ba47838ef12ce987f19d16.jpeg",
+    }
 
-    genre_counts = {}
-    for genre in genres:
-        genre_counts[genre] = genre_counts.get(genre, 0) + 1
+    # Fetch top artists from the Spotify API
+    url = "https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term"
+    data = get_spotify_data(url, access_token)
 
-    sorted_genres = sorted(genre_counts, key=genre_counts.get, reverse=True)
-    top_genres = sorted_genres[:5]
+    genres = [genre for artist in data.get('items', []) for genre in artist['genres']]
+    unique_genres = sorted(set(genres), key=genres.count, reverse=True)[:15]
+    mapped_genres = [genre_mapping.get(genre.lower(), genre) for genre in unique_genres]
 
-    while len(top_genres) < 5:
-        for genre in genre_mapping.values():
-            if genre not in top_genres:
-                top_genres.append(genre)
-                if len(top_genres) == 5:
+    # Remove duplicates while maintaining the order of genres
+    seen = set()
+    filtered_genres = []
+    for genre in mapped_genres:
+        if genre not in seen:
+            seen.add(genre)
+            filtered_genres.append(genre)
+
+    # Ensure exactly 5 genres by filling with fallback genres if necessary
+    fallback_genres = list(genre_images.keys())
+    while len(filtered_genres) < 5:
+        for fallback_genre in fallback_genres:
+            if fallback_genre not in filtered_genres:
+                filtered_genres.append(fallback_genre)
+                if len(filtered_genres) == 5:
                     break
 
-    categories_url = "https://api.spotify.com/v1/browse/categories?limit=50"
-    headers = {"Authorization": f"Bearer {access_token}"}
-    categories_data = requests.get(categories_url, headers=headers).json()
+    # Associate images with genres
+    genres_with_images = []
+    for genre in filtered_genres[:5]:
+        genre_lower = genre.lower()
+        image_url = genre_images.get(genre_lower, genre_images['indie'])
+        genres_with_images.append({
+            'name': genre,
+            'image_url': image_url
+        })
 
-    mood_image_url = None
-    for category in categories_data.get('categories', {}).get('items', []):
-        if category['name'].lower() == 'mood':  # Check for the "mood" category
-            mood_image_url = category['icons'][0]['url']
-            break
-
-    genre_images = {}
-    for category in categories_data.get('categories', {}).get('items', []):
-        category_name = category['name'].lower()
-        category_image_url = category['icons'][0]['url']  # First image for the category
-        for genre in top_genres:
-            if genre.lower() in category_name:
-                genre_images[genre] = category_image_url
-                break  # Stop searching once a match is found
-
-    for genre in top_genres:
-        if genre not in genre_images:
-            genre_images[genre] = mood_image_url
-
-    genres_with_images = [{'name': genre, 'image_url': genre_images.get(genre, mood_image_url)} for genre in top_genres]
     return genres_with_images
+
+
 
 def get_total_listening_time(user_profile):
     url = "https://api.spotify.com/v1/me/player/recently-played?limit=50"
@@ -376,6 +406,8 @@ def profile_view(request):
 def top_genres(request):
     user_profile = UserProfile.objects.get(user=request.user)
     top_genres = get_top_genres(user_profile)
+    if top_genres is None:
+        top_genres = []  # Fallback in case of None value
     return render(request, 'spotify_app/top_genres.html', {'top_genres': top_genres})
 
 @login_required

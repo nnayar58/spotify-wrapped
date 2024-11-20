@@ -3,8 +3,8 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'style/mobile.css' %}">
 <body class="top-tracks">
-<video class="video-background" autoplay loop muted playsinline>
-    <source src="{% static 'videos\bluewave.mp4' %}" type="video/mp4">
+<video class="video-background" autoplay loop muted playsinline id="background-video">
+    <source src="{% static 'videos/bluewave.mp4' %}" type="video/mp4">
 </video>
 
 <h1>Your Top Tracks</h1>
@@ -13,8 +13,24 @@
     {% if top_tracks %}
     <ul>
         <li2>
-            <img class="top-image" src="{{ top_tracks.0.image_url }}" alt="{{ top_tracks.0.name }}" style="width: 400px; height: 400px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2)">
-            <div><span style="text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);">#1<br>{{ top_tracks.0.name }}<span style="font-size: 0.9em; font-weight:100;"> - {{ top_tracks.0.artist }}</span></span></div>
+            <div class="top-image-container">
+                <img class="top-image"
+                     src="{{ top_tracks.0.image_url }}"
+                     alt="{{ top_tracks.0.name }}"
+                     style="width: 400px; height: 400px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2)"
+                     onmouseover="playPreview(this); speedUpVideo()"
+                     onmouseout="pausePreview(this); slowDownVideo()"
+                     data-preview-url="{{ top_tracks.0.preview_url }}">
+                <!-- <div class="gif-overlay">
+                    <img class="gif-img" src="{% static 'music.gif' %}" alt="Music Animation">
+                </div> -->
+            </div>
+            <div>
+                <span style="text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);">
+                    #1<br>{{ top_tracks.0.name }}
+                    <span style="font-size: 0.9em; font-weight:100;"> - {{ top_tracks.0.artist }}</span>
+                </span>
+            </div>
         </li2>
     </ul>
     {% endif %}
@@ -25,8 +41,17 @@
     <div class="left-half">
         <ul>
             <li2>
-                <img class="top-image" src="{{ top_tracks.0.image_url }}" alt="{{ top_tracks.0.name }}" style="width: 500px; height: 500px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2)">
-                <div class="top-name">#1. {{ top_tracks.0.name }}<span style="font-size: 0.9em; font-weight:100;"> - {{ top_tracks.0.artist }}</span></div>
+                <img class="top-image"
+                     src="{{ top_tracks.0.image_url }}"
+                     alt="{{ top_tracks.0.name }}"
+                     style="width: 500px; height: 500px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2)"
+                     onmouseover="playPreview(this); speedUpVideo()"
+                     onmouseout="pausePreview(this); slowDownVideo()"
+                     data-preview-url="{{ top_tracks.0.preview_url }}">
+                <div class="top-name">
+                    #1. {{ top_tracks.0.name }}
+                    <span style="font-size: 0.9em; font-weight:100;"> - {{ top_tracks.0.artist }}</span>
+                </div>
             </li2>
         </ul>
     </div>
@@ -34,17 +59,50 @@
         <ul>
             {% for track in top_tracks|slice:"1:5" %}
             <li>
-                <img src="{{ track.image_url }}" alt="{{ track.name }}" style="width: 100px; height: 100px;;">
-                <div>#{{ forloop.counter|add:1 }}. <span style="font-weight:600;">{{ track.name }}</span><span style="font-size: 0.9em; font-weight:100;"> - {{ track.artist }}</span></div>
+                <img src="{{ track.image_url }}"
+                     alt="{{ track.name }}"
+                     style="width: 100px; height: 100px;"
+                     onmouseover="playPreview(this); speedUpVideo()"
+                     onmouseout="pausePreview(this); slowDownVideo()"
+                     data-preview-url="{{ track.preview_url }}">
+                <div>
+                    #{{ forloop.counter|add:1 }}. <span style="font-weight:600;">{{ track.name }}</span>
+                    <span style="font-size: 0.9em; font-weight:100;"> - {{ track.artist }}</span>
+                </div>
             </li>
             {% endfor %}
         </ul>
     </div>
 </div>
-<a href="{% url 'spotify_app:top_artists' %}" class="btn-prev">Previous</a>
-<a href="{% url 'spotify_app:listening_habits' %}" class="btn-next">Next</a>
+<a href="{% url 'spotify_app:top_genres' %}" class="btn-prev">Previous</a>
+<a href="{% url 'spotify_app:top_artists' %}" class="btn-next">Next</a>
 
 <script>
+    function playPreview(element) {
+        const previewUrl = element.getAttribute('data-preview-url');
+        if (previewUrl) {
+            let audio = new Audio(previewUrl);
+            element.audio = audio; // Attach the audio object to the element for stopping later
+            audio.play();
+        }
+    }
+
+    function pausePreview(element) {
+        if (element.audio) {
+            element.audio.pause();
+            element.audio = null; // Remove the audio object
+        }
+    }
+    function speedUpVideo() {
+        const video = document.getElementById('background-video');
+        video.playbackRate = 3; // Speed up the video by a factor of 2
+    }
+
+    function slowDownVideo() {
+        const video = document.getElementById('background-video');
+        video.playbackRate = 1; // Reset to normal speed
+    }
+
     document.getElementById("top5Btn").addEventListener("click", function() {
         // Hide the top-1 section
         document.getElementById("top-1").style.display = "none";

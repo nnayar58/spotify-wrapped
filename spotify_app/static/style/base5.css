@@ -41,8 +41,9 @@ body.top-tracks { background-color: #20B6CC; }
 
 /* GIF image size */
 .gif-img {
-    width: 100vw; /* Adjust the size as needed */
-    height: 100vh;
+    width: 90vw; /* Adjust the size as needed */
+    height: 90vh;
+    opacity: 0.2;
 }
 
 /* Navbar Styles */

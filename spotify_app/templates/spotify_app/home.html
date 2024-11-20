@@ -11,22 +11,26 @@
 </head>
 <body>
 
-    <!-- Video Background -->
-    <video class="video-background" autoplay loop muted playsinline>
-        <source src="{% static 'home-video.mp4' %}" type="video/mp4">
-    </video>
+<!-- Video Background -->
+<video class="video-background" autoplay loop muted playsinline>
+    <source src="{% static 'home-video.mp4' %}" type="video/mp4">
+</video>
 
-    <!-- Content Overlay -->
-    <div class="content">
-        <div class="wrapped-overlay">
-            <h1>Discover your year in music</h1>
-            <div class="bubble">
-                <h2>Wrapped in Spotify Music</h2>
-            </div>
-            <!-- Single Get Started Button -->
-            <a href="{% url 'spotify_app:login2' %}" class="btn-get-started">Get Started</a>
+<!-- Content Overlay -->
+<div class="content">
+    <div class="wrapped-overlay">
+        <h1>Discover your year in music</h1>
+        <div class="bubble">
+            <h2>Wrapped in Spotify Music</h2>
         </div>
+        <!-- Single Get Started Button -->
+        {% if user.is_authenticated %}
+        <a href="{% url 'spotify_app:profile' %}" class="btn-get-started">Get Started</a>
+        {% else %}
+        <a href="{% url 'spotify_app:login2' %}" class="btn-get-started">Get Started</a>
+        {% endif %}
     </div>
+</div>
 
 </body>
 </html>
