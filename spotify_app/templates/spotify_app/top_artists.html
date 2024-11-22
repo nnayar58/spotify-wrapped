@@ -21,7 +21,7 @@
         </li2>
     </ul>
     {% endif %}
-    <button class="btn-top-5" id="top5Btn">Show Top 5 Artists</button>
+    <button class="btn-top-5" id="top5Btn" style="position: absolute; top: 90%;left: 50%;transform: translate(-50%, -50%); z-index: 1000;">Show Top 5 Artists</button>
 </div>
 
 <div class="top-5" id="top-5" style="display: none;">
@@ -45,8 +45,8 @@
     </div>
 </div>
 
-<a href="{% url 'spotify_app:game' %}" class="btn-prev">Previous</a>
-<a href="{% url 'spotify_app:top_tracks' %}" class="btn-next">Next</a>
+<a href="{% url 'spotify_app:game_artist' %}" class="btn-prev">Previous</a>
+<a href="{% url 'spotify_app:game_track' %}" class="btn-next">Next</a>
 
 <script>
     document.getElementById("top5Btn").addEventListener("click", function() {

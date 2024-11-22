@@ -2,7 +2,7 @@
 {% block content %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'style/mobile.css' %}">
-<body class="game-page">
+<body class="game-artist">
 <video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/purplewave.mp4' %}">
     <source src="{% static 'videos/purplewave.mp4' %}" type="video/mp4">
 </video>
@@ -13,7 +13,7 @@
     {% if top_artists %}
     <ul>
         <li2>
-            <img class="top-image" src="{% static '/guess.png' %}" style="width: 400px; height: 400px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2)">
+            <img class="top-image" src="{% static '/guess_artist.png' %}" style="width: 400px; height: 400px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2)">
             <div class="gif-overlay">
                 <img class="gif-img">
             </div>
@@ -21,7 +21,7 @@
         </li2>
     </ul>
     {% endif %}
-    <button class="btn-top-5" id="top5Btn">Show Artist Choices</button>
+    <button class="btn-top-5" id="top5Btn" style="position: absolute; top: 90%;left: 50%;transform: translate(-50%, -50%); z-index: 1000;">Show Artist Choices</button>
 </div>
 
 <div class="top-5-game" id="top-5-game" style="display: none; justify-content: center; ">
@@ -39,7 +39,7 @@
 
 <div id="result" style="display:none; text-align: center; margin-top:200px;">
     <h3 id="result-message"></h3>
-    <button class="btn-top-5" id="try-again-btn" style="display: none;">Try Again</button> <!-- Add Try Again button -->
+    <button class="btn-top-5" id="try-again-btn" style="display: none;position: absolute; top: 75%;left: 50%;transform: translate(-50%, -50%); z-index: 1000;">Try Again</button> <!-- Add Try Again button -->
 </div>
 
 <a href="{% url 'spotify_app:profile' %}" class="btn-prev">Previous</a>
@@ -63,10 +63,10 @@
             const tryAgainBtn = document.getElementById('try-again-btn');
 
             if (selectedArtist === correctArtist) {
-                resultMessage.innerHTML = `<span style="font-size: 2.5rem;">Correct!</span> You guessed your top artist!<br>We love <span style="font-size: 2.5rem;">${correctArtist}</span>, too!`;
+                resultMessage.innerHTML = `<span style="font-size: 2.5rem;">Correct!</span> You guessed your top artist!<br>We love <span style="font-size: 2rem;">${correctArtist}</span>, too!`;
                 tryAgainBtn.style.display = "none"; // Hide "Try Again" button if correct
             } else {
-                resultMessage.innerHTML = `<span style="font-size: 2.5rem;">Wrong!</span> Your top artist is not <span style="font-size: 2.5rem;">${selectedArtist}</span>.`;
+                resultMessage.innerHTML = `<span style="font-size: 2.5rem;">Wrong!</span> Your top artist is not <span style="font-size: 2rem;">${selectedArtist}</span>.`;
                 tryAgainBtn.style.display = "inline"; // Show "Try Again" button if wrong
             }
             resultDiv.style.display = "block";

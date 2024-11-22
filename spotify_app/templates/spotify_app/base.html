@@ -29,8 +29,8 @@
                         <label for="themeSwitcher">Theme:</label>
                         <select id="themeSwitcher">
                             <option value="{% static 'style/base8.css' %}" selected>Base</option>
-                            <option value="{% static 'style/halloween-base.css' %}" >Halloween</option>
-                            <option value="{% static 'style/christmas.css' %}">Christmas</option>
+                            <option value="{% static 'style/halloween.css' %}" >Halloween</option>
+                            <option value="{% static 'style/christmas1.css' %}">Christmas</option>
                         </select>
                 </div>
             </div>
@@ -57,9 +57,9 @@
             if (savedTheme) {
                 themeStylesheet.href = savedTheme;
                 // Update the video based on the saved theme
-                if (savedTheme.includes('halloween-base.css')) {
+                if (savedTheme.includes('halloween.css')) {
                     backgroundVideo.src = "{% static 'videos/halloween.mp4' %}";  // Halloween video
-                } else if (savedTheme.includes('christmas.css')) {
+                } else if (savedTheme.includes('christmas1.css')) {
                     backgroundVideo.src = "{% static 'videos/christmas.mp4' %}";  // Christmas video
                 } else if (savedTheme.includes('base8.css')) {
                     backgroundVideo.src = backgroundVideo.getAttribute('data-default-video');  // Default base video
@@ -74,13 +74,13 @@
 
                 // Check if it's Halloween (October 31) or Christmas (December 25)
                 if (currentMonth === 10 && currentDay === 31) {
-                    themeStylesheet.href = "{% static 'style/halloween-base.css' %}";
+                    themeStylesheet.href = "{% static 'style/halloween.css' %}";
                     backgroundVideo.src = "{% static 'videos/halloween.mp4' %}";  // Halloween video
-                    themeSwitcher.value = "{% static 'style/halloween-base.css' %}"; // Set dropdown to Halloween
+                    themeSwitcher.value = "{% static 'style/halloween.css' %}"; // Set dropdown to Halloween
                 } else if (currentMonth === 12 && currentDay === 25) {
-                    themeStylesheet.href = "{% static 'style/christmas.css' %}";
+                    themeStylesheet.href = "{% static 'style/christmas1.css' %}";
                     backgroundVideo.src = "{% static 'videos/christmas.mp4' %}";  // Christmas video
-                    themeSwitcher.value = "{% static 'style/christmas.css' %}"; // Set dropdown to Christmas
+                    themeSwitcher.value = "{% static 'style/christmas1.css' %}"; // Set dropdown to Christmas
                 } else {
                     themeStylesheet.href = "{% static 'style/base8.css' %}";
                     backgroundVideo.src = backgroundVideo.getAttribute('data-default-video');  // Default base video
@@ -107,9 +107,9 @@
             themeStylesheet.href = event.target.value;
 
             // Change the background video based on the selected theme
-            if (event.target.value.includes('halloween-base.css')) {
+            if (event.target.value.includes('halloween.css')) {
                 backgroundVideo.src = "{% static 'videos/halloween.mp4' %}";  // Halloween video
-            } else if (event.target.value.includes('christmas.css')) {
+            } else if (event.target.value.includes('christmas1.css')) {
                 backgroundVideo.src = "{% static 'videos/christmas.mp4' %}";  // Christmas video
             } else if (event.target.value.includes('base8.css')) {
                 backgroundVideo.src = backgroundVideo.getAttribute('data-default-video');  // Default base video

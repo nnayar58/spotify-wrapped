@@ -24,7 +24,8 @@ from .views import (  # Explicitly import all views used in urlpatterns
     save_wrapped,
     replay_wrap,
     view_wrap,
-    game,
+    game_artist,
+    game_track,
 )
 
 app_name = 'spotify_app'  # Define the namespace
@@ -47,7 +48,8 @@ urlpatterns = [
 
 
     # Flow pages
-    path('game/', game, name='game'),
+    path('game_artist/', game_artist, name='game_artist'),
+    path('game_track/', game_track, name='game_track'),
     path('top-genres/', top_genres, name='top_genres'),
     path('top-artists/', top_artists, name='top_artists'),
     path('top-tracks/', top_tracks, name='top_tracks'),

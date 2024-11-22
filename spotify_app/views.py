@@ -30,34 +30,6 @@ from .models import Feedback
 
 import random
 
-def game(request):
-    user_profile = UserProfile.objects.get(user=request.user)  # Get the user's profile
-    top_artists = get_top_artists(user_profile)  # Fetch top artists
-
-    # Ensure there are at least 5 artists to choose from
-    if len(top_artists) >= 5:
-        # Exclude the top artist (the first one in the list) from the shuffle
-        remaining_artists = top_artists[1:25]  # Get the next 14 artists, excluding the top artist
-
-        # Shuffle the remaining 14 artists
-        shuffled_artists = random.sample(remaining_artists, len(remaining_artists))  # Shuffle the remaining artists
-
-        # Take the first 4 artists from the shuffled list
-        artists_to_show = shuffled_artists[:4]
-
-        # Add the top artist as the 5th choice
-        artists_to_show.append(top_artists[0])  # Add the top artist to the list
-
-        # Shuffle the final list to randomize position
-        random.shuffle(artists_to_show)
-    else:
-        artists_to_show = top_artists  # If there are fewer than 5 artists, just show them all
-
-    return render(request, 'spotify_app/game.html', {'top_artists': top_artists, 'shuffled_artists': artists_to_show})
-
-
-
-
 def home(request):
     return render(request, 'spotify_app/home.html')
 
@@ -151,7 +123,7 @@ def get_spotify_data(url, user_profile):
 # Function to get top artists, top songs, genres, listening time, and peak day
 # Function to get top artists, top songs, genres, listening time, and peak day
 def get_top_artists(access_token):
-    url = "https://api.spotify.com/v1/me/top/artists?limit=15&time_range=long_term"
+    url = "https://api.spotify.com/v1/me/top/artists?limit=50&time_range=long_term"
     data = get_spotify_data(url, access_token)
     artists = []
     for artist in data.get('items', []):
@@ -163,7 +135,7 @@ def get_top_artists(access_token):
     return artists
 
 def get_top_tracks(access_token):
-    url = "https://api.spotify.com/v1/me/top/tracks?limit=5&time_range=long_term"  # Last 12 months
+    url = "https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term"  # Last 12 months
     data = get_spotify_data(url, access_token)
     print("Top Tracks Data:", data)  # Debugging line
     return [
@@ -693,3 +665,59 @@ def base_view(request):
     return render(request, 'base.html', {'theme': theme})
 
 from random import sample
+
+def game_artist(request):
+    user_profile = UserProfile.objects.get(user=request.user)  # Get the user's profile
+    top_artists = get_top_artists(user_profile)  # Fetch top artists
+
+    # Ensure there are at least 5 artists to choose from
+    if len(top_artists) >= 5:
+        # Exclude the top artist (the first one in the list) from the shuffle
+        remaining_artists = top_artists[1:25]  # Get the next artists, excluding the top artist
+
+        # Shuffle the remaining 14 artists
+        shuffled_artists = random.sample(remaining_artists, len(remaining_artists))  # Shuffle the remaining artists
+
+        # Take the first 4 artists from the shuffled list
+        artists_to_show = shuffled_artists[:4]
+
+        # Add the top artist as the 5th choice
+        artists_to_show.append(top_artists[0])  # Add the top artist to the list
+
+        # Shuffle the final list to randomize position
+        random.shuffle(artists_to_show)
+    else:
+        artists_to_show = top_artists  # If there are fewer than 5 artists, just show them all
+
+    return render(request, 'spotify_app/game_artist.html', {'top_artists': top_artists, 'shuffled_artists': artists_to_show})
+
+import random
+
+def game_track(request):
+    user_profile = UserProfile.objects.get(user=request.user)  # Get the user's profile
+    top_tracks = get_top_tracks(user_profile)  # Fetch top tracks
+
+    # Ensure there are at least 5 tracks to select from
+    if len(top_tracks) >= 5:
+        # Randomly select one track from the top 6-30 as the "correct track"
+        correct_track = random.choice(top_tracks[5:30])
+
+        # Exclude the correct track from the remaining pool
+        remaining_tracks = [track for track in top_tracks if track != correct_track]
+
+        # Shuffle the remaining tracks and select 4 others
+        shuffled_tracks = random.sample(remaining_tracks, min(len(remaining_tracks), 4))
+
+        # Combine the correct track with the shuffled tracks
+        tracks_to_show = shuffled_tracks + [correct_track]
+        random.shuffle(tracks_to_show)  # Randomize the display order
+    else:
+        correct_track = top_tracks[0] if top_tracks else None  # Default to the top track
+        tracks_to_show = top_tracks  # If fewer than 5 tracks, just show all tracks
+
+    return render(request, 'spotify_app/game_track.html', {
+        'top_tracks': top_tracks,
+        'shuffled_track': tracks_to_show,
+        'correct_track': correct_track
+    })
+

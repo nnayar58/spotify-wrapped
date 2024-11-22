@@ -1,0 +1,152 @@
+{% extends "spotify_app/base.html" %}
+{% block content %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'style/mobile.css' %}">
+<body class="game-track">
+<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/bluewave.mp4' %}">
+    <source src="{% static 'videos/bluewave.mp4' %}" type="video/mp4">
+</video>
+
+<h1>Guess One of Your Most Played Tracks!</h1>
+
+<div class="top-1" id="top-1">
+    {% if top_tracks %}
+    <ul>
+        <li2>
+            <img class="top-image"
+                 src="{% static '/guess_track.jpg' %}"
+                 style="width: 400px; height: 400px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2)"
+                 onmouseover="playPreview(this); speedUpVideo()"
+                 onmouseout="pausePreview(this); slowDownVideo()"
+                 data-preview-url="{{ correct_track.preview_url }}">
+            <div class="gif-overlay">
+                <img class="gif-img">
+            </div>
+            <div><span style="text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);">Hover to hear a <br>snippet of the song!</span></div>
+        </li2>
+    </ul>
+    {% endif %}
+    <button class="btn-top-5" id="top5Btn" style="position: absolute; top: 90%;left: 50%;transform: translate(-50%, -50%); z-index: 1000;">Show Track Choices</button>
+</div>
+<div id="top-5-game" style="display:none; flex-direction: column; justify-content: center;">
+    <div class="top-5-game" style="justify-content: center; ">
+        <div class="track-choices">
+            <ul id="track-list" style="display: flex; flex-direction: row; justify-content: center; flex-wrap: wrap; list-style: none; margin-top:75px;">
+                {% for track in shuffled_track %}
+                <li class="track-choice" data-name="{{ track.name }}" style="margin: 20px; padding: 25px; width: 250px; text-align: center; cursor: pointer;">
+                    <img src="{{ track.image_url }}" alt="{{ track.name }}" style="width: 200px; height: 200px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+                    <div style="font-size: 20px; margin-top: 10px;">{{ track.name }}</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    <button class="btn-top-5" id="top1Btn" style="position: absolute; top: 90%;left: 50%;transform: translate(-50%, -50%); z-index: 1000;">Listen Again</button>
+</div>
+
+
+<div id="result" style="display:none; text-align: center; margin-top:200px;">
+    <h3 id="result-message"></h3>
+    <button class="btn-top-5" id="try-again-btn" style="display: none;position: absolute; top: 75%;left: 50%;transform: translate(-50%, -50%); z-index: 1000;">Try Again</button> <!-- Add Try Again button -->
+    <button class="btn-top-5" id="play-again-btn" style="display: none;position: absolute; top: 75%;left: 50%;transform: translate(-50%, -50%); z-index: 1000;" onclick="playAgain()">Play Again</button> <!-- Add Play Again button -->
+
+</div>
+
+<a href="{% url 'spotify_app:top_artists' %}" class="btn-prev">Previous</a>
+<a href="{% url 'spotify_app:top_tracks' %}" class="btn-next">Next</a>
+
+<script>
+    // Show track choices when the button is clicked
+    document.getElementById("top5Btn").addEventListener("click", function() {
+        document.getElementById("top-1").style.display = "none";
+        document.getElementById("top-5-game").style.display = "flex";
+    });
+
+    // Show top-1 when the new button is clicked
+    document.getElementById("top1Btn").addEventListener("click", function() {
+        document.getElementById("top-5-game").style.display = "none";
+        document.getElementById("top-1").style.display = "block";
+    });
+
+    // Handle track choice selection
+    // Handle track choice selection
+    const trackChoices = document.querySelectorAll('.track-choice');
+    trackChoices.forEach(choice => {
+        choice.addEventListener('click', function() {
+            const selectedtrack = this.getAttribute('data-name');
+            const correcttrack = "{{ correct_track.name }}"; // The correct track
+            const resultMessage = document.getElementById('result-message');
+            const resultDiv = document.getElementById('result');
+            const tryAgainBtn = document.getElementById('try-again-btn');
+            const playAgainBtn = document.getElementById('play-again-btn'); // Get the Play Again button
+
+            if (selectedtrack === correcttrack) {
+                resultMessage.innerHTML = `<span style="font-size: 2.5rem;">Correct!</span><br><span style="font-size: 2rem;">${correcttrack}</span> is one of your top songs!<br>Go Next and see your <span style="font-size: 2rem;">Top 5 Tracks!</span>`;
+                tryAgainBtn.style.display = "none"; // Hide "Try Again" button if correct
+                playAgainBtn.style.display = "inline"; // Show "Play Again" button if correct
+            } else {
+                resultMessage.innerHTML = `<span style="font-size: 2.5rem;">Wrong!</span><br><span style="font-size: 2rem;">${selectedtrack}</span> is not the song.<br>Listen to it again`;
+                tryAgainBtn.style.display = "inline"; // Show "Try Again" button if wrong
+                playAgainBtn.style.display = "none"; // Hide "Play Again" button if wrong
+            }
+            resultDiv.style.display = "block";
+            document.getElementById("top-5-game").style.display = "none";
+        });
+    });
+
+    // Play again functionality (reload the page)
+    function playAgain() {
+        location.reload(); // Reload the page
+    }
+
+    // Try again button functionality
+    document.getElementById("try-again-btn").addEventListener("click", function() {
+        // Reset the game to the same list of tracks
+        document.getElementById("result").style.display = "none";
+        document.getElementById("top-5-game").style.display = "flex";
+    });
+
+
+    function playPreview(element) {
+        const previewUrl = element.getAttribute('data-preview-url');
+        if (previewUrl) {
+            let audio = new Audio(previewUrl);
+            const maxPreviewDuration = 30; // Spotify previews are typically 30 seconds long
+            const randomStartTime = Math.random() * (maxPreviewDuration - 2); // Ensure random start time is within the first (maxPreviewDuration - 2) seconds
+
+            audio.currentTime = randomStartTime; // Set the starting point
+            element.audio = audio; // Attach the audio object to the element for stopping later
+
+            audio.play();
+
+            // Stop the audio after 2 seconds
+            element.audioTimeout = setTimeout(() => {
+                audio.pause();
+                audio.currentTime = 0; // Reset the audio to the start
+            }, 2000); // 2000 milliseconds = 2 seconds
+        }
+
+    }
+
+    function pausePreview(element) {
+        if (element.audio) {
+            element.audio.pause();
+            element.audio.currentTime = 0; // Reset to the start
+            clearTimeout(element.audioTimeout); // Clear the timeout to stop any pending pauses
+            element.audio = null; // Remove the audio object
+        }
+    }
+
+    function speedUpVideo() {
+        const video = document.getElementById('background-video');
+        video.playbackRate = 3; // Speed up the video by a factor of 2
+    }
+
+    function slowDownVideo() {
+        const video = document.getElementById('background-video');
+        video.playbackRate = 1; // Reset to normal speed
+    }
+</script>
+
+</body>
+{% endblock %}

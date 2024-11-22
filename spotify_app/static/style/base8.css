@@ -31,8 +31,15 @@ body.top-genres {
     background-position: center; /* Center the GIF */
     background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
 }
-body.game-page {
+body.game-artist {
     background-image: url('../videos/purplewave.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
+
+body.game-track {
+    background-image: url('../videos/bluewave.jpg');
     background-size: cover; /* Ensure the GIF covers the entire viewport */
     background-position: center; /* Center the GIF */
     background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
@@ -74,7 +81,7 @@ body.game-page {
 
 /* Show overlay when hovering over the .top-image */
 .top-image:hover + .gif-overlay {
-    opacity: 0; /* Adjust transparency */
+    opacity: 0.3; /* Adjust transparency */
 }
 
 /* Ensure the top-image stays above the gif-overlay */
