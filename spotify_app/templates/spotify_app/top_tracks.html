@@ -3,7 +3,7 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'style/mobile.css' %}">
 <body class="top-tracks">
-<video class="video-background" autoplay loop muted playsinline id="background-video">
+<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/bluewave.mp4' %}">
     <source src="{% static 'videos/bluewave.mp4' %}" type="video/mp4">
 </video>
 
@@ -21,12 +21,12 @@
                      onmouseover="playPreview(this); speedUpVideo()"
                      onmouseout="pausePreview(this); slowDownVideo()"
                      data-preview-url="{{ top_tracks.0.preview_url }}">
-                <!-- <div class="gif-overlay">
-                    <img class="gif-img" src="{% static 'music.gif' %}" alt="Music Animation">
-                </div> -->
+                 <div class="gif-overlay">
+                    <img class="gif-img">
+                </div>
             </div>
             <div>
-                <span style="text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);">
+                <span style="text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);">
                     #1<br>{{ top_tracks.0.name }}
                     <span style="font-size: 0.9em; font-weight:100;"> - {{ top_tracks.0.artist }}</span>
                 </span>
@@ -110,6 +110,8 @@
         // Show the top-5 section
         document.getElementById("top-5").style.display = "flex";
     });
+
+
 </script>
 </body>
 {% endblock %}

@@ -5,9 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Spotify Wrapped</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-{% load static %}
-<link rel="stylesheet" href="{% static 'style/base6.css' %}">
-
+    {% load static %}
+    <link id="themeStylesheet" rel="stylesheet" href="{% static 'style/base.css' %}">
 </head>
 <body>
     <!-- Navigation Bar -->
@@ -26,6 +25,13 @@
                 <div id="dropdownMenu" class="dropdown-menu">
                     <a href="{% url 'spotify_app:profile' %}" class="dropdown-item">Profile</a>
                     <a href="{% url 'spotify_app:logout' %}" class="dropdown-item">Logout</a>
+                    <div class="dropdown-item">
+                        <label for="themeSwitcher">Theme:</label>
+                        <select id="themeSwitcher">
+                            <option value="{% static 'style/base.css' %}" selected>Base</option>
+                            <option value="{% static 'style/halloween-base.css' %}" >Halloween</option>
+                            <option value="{% static 'style/christmas.css' %}">Christmas</option>
+                        </select>
                 </div>
             </div>
         </div>
@@ -39,18 +45,76 @@
 
     <!-- JavaScript for Dropdown Menu -->
     <script>
-        const profileButton = document.getElementById('profileButton');
-        const dropdownMenu = document.getElementById('dropdownMenu');
+        const themeSwitcher = document.getElementById('themeSwitcher');
+        const themeStylesheet = document.getElementById('themeStylesheet');
+        const backgroundVideo = document.getElementById('background-video');
 
-        profileButton.addEventListener('click', () => {
-            dropdownMenu.classList.toggle('show');
-        });
+        // Check if there is a saved theme in localStorage when the page loads
+        window.addEventListener('load', () => {
+            const savedTheme = localStorage.getItem('theme'); // Get the saved theme
+            if (savedTheme) {
+                themeStylesheet.href = savedTheme;
 
-        document.addEventListener('click', (e) => {
-            if (!profileButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                dropdownMenu.classList.remove('show');
+                // Set the correct video based on the selected theme
+                if (savedTheme.includes('halloween-base.css')) {
+                    backgroundVideo.src = "{% static 'videos/halloween.mp4' %}";  // Halloween video
+                } else if (savedTheme.includes('christmas.css')) {
+                    backgroundVideo.src = "{% static 'videos/christmas.mp4' %}";  // Christmas video
+                } else if (savedTheme.includes('base.css')) {
+                    backgroundVideo.src = backgroundVideo.getAttribute('data-default-video');  // Get the actual base video
+                }
+
+                // Reload the video to apply the new source immediately
+                backgroundVideo.load();
+
+                // Ensure the video starts playing correctly after the source is set
+                backgroundVideo.oncanplay = () => {
+                    backgroundVideo.play();
+                };
+
+                // Set the dropdown to reflect the saved theme
+                themeSwitcher.value = savedTheme;  // This sets the value of the dropdown to the saved theme
             }
         });
+
+        themeSwitcher.addEventListener('change', (event) => {
+        // Change the theme stylesheet based on the switcher's value
+        themeStylesheet.href = event.target.value;
+
+        // Change the background video based on the selected theme
+        if (event.target.value.includes('halloween-base.css')) {
+            backgroundVideo.src = "{% static 'videos/halloween.mp4' %}";  // Halloween video
+        } else if (event.target.value.includes('christmas.css')) {
+            backgroundVideo.src = "{% static 'videos/christmas.mp4' %}";  // Christmas video
+        } else if (event.target.value.includes('base.css')) {
+            backgroundVideo.src = backgroundVideo.getAttribute('data-default-video');  // Get the actual base video
+        }
+
+        // Reload the video to apply the new source immediately
+        backgroundVideo.load();
+
+        // Ensure the video starts playing correctly after the source is set
+        backgroundVideo.oncanplay = () => {
+            backgroundVideo.play();
+        };
+
+        // Save the selected theme to localStorage
+        localStorage.setItem('theme', event.target.value);
+    });
+
+
+        const profileButton = document.getElementById('profileButton');
+            const dropdownMenu = document.getElementById('dropdownMenu');
+
+            profileButton.addEventListener('click', () => {
+                dropdownMenu.classList.toggle('show');
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!profileButton.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
     </script>
 </body>
 </html>

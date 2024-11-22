@@ -3,8 +3,8 @@
 {% block content %}
 <link rel="stylesheet" href="{% static 'style/mobile.css' %}">
 <body class="top-genres">
-<!-- Header Title -->
-<video class="video-background" autoplay loop muted playsinline>
+
+<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/pinkwave.mp4' %}">
     <source src="{% static 'videos\pinkwave.mp4' %}" type="video/mp4">
 </video>
 
@@ -15,7 +15,10 @@
     <ul>
         <li2>
             <img class="top-image" src="{{ top_genres.0.image_url }}" alt="{{ top_genres.0.name }}" style="width: 400px; height: 400px;box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2)">
-            <div><span style="text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);">#1<br>{{ top_genres.0.name }}</span></div>
+            <div class="gif-overlay">
+                <img class="gif-img">
+            </div>
+            <div><span style="text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);">#1<br>{{ top_genres.0.name }}</span></div>
         </li2>
     </ul>
     {% endif %}
