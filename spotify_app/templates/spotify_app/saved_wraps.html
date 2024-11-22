@@ -1,0 +1,23 @@
+{% extends "spotify_app/base.html" %}
+
+{% block content %}
+<div class="saved-wraps-container">
+    <h1>Your Saved Wraps</h1>
+    {% if saved_wraps %}
+        <ul class="wrap-list">
+            {% for wrap in saved_wraps %}
+                <li class="wrap-item">
+                    <p><strong>Saved On:</strong> {{ wrap.created_at|date:"F j, Y, g:i a" }}</p>
+                    <a href="{% url 'spotify_app:replay_wrap' wrap.id %}" class="btn-replay">View</a>
+                    <form action="{% url 'spotify_app:delete_wrap' wrap.id %}" method="POST" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn-next" onclick="return confirm('Are you sure you want to delete this wrap?')">Delete</button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No saved wraps yet. Save your wrapped summary to see it here.</p>
+    {% endif %}
+</div>
+{% endblock %}

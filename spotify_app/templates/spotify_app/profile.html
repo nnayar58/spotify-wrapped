@@ -38,5 +38,13 @@
         </a>
     </div>
     {% endif %}
+
+    <!-- Saved Wraps Button -->
+    <div class="saved-wraps-button-container">
+        <a href="{% url 'spotify_app:view_saved_wraps' %}" class="saved-wraps-button">View Saved Wraps</a>
+    </div>
+
+    <!-- Delete Account -->
+    <a href="{% url 'spotify_app:delete_account' %}" class="delete-account-link">Delete Account</a>
 </div>
 {% endblock %}

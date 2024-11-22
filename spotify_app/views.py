@@ -384,67 +384,119 @@ def logout_view(request):
 
 from django.contrib.auth.decorators import login_required
 
-@login_required
+from .models import SavedWrap
+
 def profile_view(request):
     user = request.user
-    spotify_connected = is_spotify_connected(user)
+    spotify_connected = hasattr(user, 'userprofile') and user.userprofile.access_token
 
-    context = {
+    # Retrieve saved wraps for the user
+    saved_wraps = SavedWrap.objects.filter(user=user)
+
+    return render(request, 'spotify_app/profile.html', {
         'user': user,
         'spotify_connected': spotify_connected,
-        'date_joined': user.date_joined,
-    }
-
-    # Do not fetch top artists, tracks, or genres here to avoid spoilers
-
-    return render(request, 'spotify_app/profile.html', context)
+        'saved_wraps': saved_wraps,  # Pass saved wraps to the template
+    })
 
 
 
-# Top Genres Page
-@login_required
-def top_genres(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-    top_genres = get_top_genres(user_profile)
-    if top_genres is None:
-        top_genres = []  # Fallback in case of None value
-    return render(request, 'spotify_app/top_genres.html', {'top_genres': top_genres})
 
 @login_required
 def top_artists(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-    top_artists = get_top_artists(user_profile)
-    return render(request, 'spotify_app/top_artists.html', {'top_artists': top_artists})
+    if request.session.get('is_replay'):
+        top_artists = request.session['replay_data']['top_artists']
+        context = {'top_artists': top_artists, 'is_replay': True}
+        if request.session.get('current_step') == 'top_artists':
+            request.session['current_step'] = 'top_tracks'
+            return render(request, 'spotify_app/top_artists.html', context)
+        else:
+            return redirect('spotify_app:top_tracks')
+    else:
+        # Existing code for fetching new data
+        user_profile = UserProfile.objects.get(user=request.user)
+        top_artists = get_top_artists(user_profile)
+        return render(request, 'spotify_app/top_artists.html', {'top_artists': top_artists})
 
 @login_required
 def top_tracks(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-    top_tracks = get_top_tracks(user_profile)
-    return render(request, 'spotify_app/top_tracks.html', {'top_tracks': top_tracks})
+    if request.session.get('is_replay'):
+        top_tracks = request.session['replay_data']['top_tracks']
+        context = {'top_tracks': top_tracks, 'is_replay': True}
+        if request.session.get('current_step') == 'top_tracks':
+            request.session['current_step'] = 'top_genres'
+            return render(request, 'spotify_app/top_tracks.html', context)
+        else:
+            return redirect('spotify_app:top_genres')
+    else:
+        # Existing code for fetching new data
+        user_profile = UserProfile.objects.get(user=request.user)
+        top_tracks = get_top_tracks(user_profile)
+        return render(request, 'spotify_app/top_tracks.html', {'top_tracks': top_tracks})
+
+@login_required
+def top_genres(request):
+    if request.session.get('is_replay'):
+        top_genres = request.session['replay_data']['top_genres']
+        context = {'top_genres': top_genres, 'is_replay': True}
+        if request.session.get('current_step') == 'top_genres':
+            request.session['current_step'] = 'listening_habits'
+            return render(request, 'spotify_app/top_genres.html', context)
+        else:
+            return redirect('spotify_app:listening_habits')
+    else:
+        # Existing code for fetching new data
+        user_profile = UserProfile.objects.get(user=request.user)
+        top_genres = get_top_genres(user_profile)
+        return render(request, 'spotify_app/top_genres.html', {'top_genres': top_genres})
 
 @login_required
 def listening_habits(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-    total_listening_time = get_total_listening_time(user_profile)
-    peak_listening_day = get_peak_listening_day(user_profile)
-    return render(request, 'spotify_app/listening_habits.html', {
-        'total_listening_time': total_listening_time,
-        'peak_listening_day': peak_listening_day,
-    })
+    if request.session.get('is_replay'):
+        total_listening_time = request.session['replay_data']['total_listening_time']
+        peak_listening_day = request.session['replay_data']['peak_listening_day']
+        context = {
+            'total_listening_time': total_listening_time,
+            'peak_listening_day': peak_listening_day,
+            'is_replay': True
+        }
+        if request.session.get('current_step') == 'listening_habits':
+            request.session['current_step'] = 'final_summary'
+            return render(request, 'spotify_app/listening_habits.html', context)
+        else:
+            return redirect('spotify_app:final_summary')
+    else:
+        # Existing code for fetching new data
+        user_profile = UserProfile.objects.get(user=request.user)
+        total_listening_time = get_total_listening_time(user_profile)
+        peak_listening_day = get_peak_listening_day(user_profile)
+        return render(request, 'spotify_app/listening_habits.html', {
+            'total_listening_time': total_listening_time,
+            'peak_listening_day': peak_listening_day,
+        })
 
-# Final Summary Page
 @login_required
 def final_summary(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-
-    context = {
-        "top_artists": get_top_artists(user_profile),
-        "top_tracks": get_top_tracks(user_profile),
-        "top_genres": get_top_genres(user_profile),
-        "total_listening_time": get_total_listening_time(user_profile),
-        "peak_listening_day": get_peak_listening_day(user_profile),
-    }
+    if request.session.get('is_replay'):
+        context = request.session['replay_data']
+        context['is_replay'] = True
+        # Clear the replay session data
+        request.session.pop('replay_data', None)
+        request.session.pop('is_replay', None)
+        request.session.pop('current_step', None)
+    else:
+        # Existing code for fetching new data
+        user_profile = UserProfile.objects.get(user=request.user)
+        context = {
+            'top_genres': get_top_genres(user_profile),
+            'top_artists': get_top_artists(user_profile),
+            'top_tracks': get_top_tracks(user_profile),
+            'total_listening_time': get_total_listening_time(user_profile),
+            'peak_listening_day': get_peak_listening_day(user_profile),
+            'is_replay': False,
+        }
     return render(request, 'spotify_app/final_summary.html', context)
+
 
 def is_spotify_connected(user):
     try:
@@ -482,3 +534,108 @@ def view_feedback(request):
 
 def feedback_success(request):
     return render(request, 'spotify_app/feedback_success.html')
+
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import SavedWrap
+
+@login_required
+def view_saved_wraps(request):
+    saved_wraps = SavedWrap.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'spotify_app/saved_wraps.html', {'saved_wraps': saved_wraps})
+
+def delete_wrap(request, wrap_id):
+    saved_wrap = get_object_or_404(SavedWrap, id=wrap_id, user=request.user)
+    saved_wrap.delete()
+    return redirect('spotify_app:view_saved_wraps')
+
+from django.contrib.auth.models import User
+from django.contrib.auth import logout
+
+def delete_account(request):
+    if request.method == 'POST':
+        user = request.user
+        logout(request)
+        user.delete()
+        return redirect('spotify_app:home')
+    return render(request, 'spotify_app/delete_account.html')
+
+from django.shortcuts import render, redirect
+from django.http import HttpResponseNotAllowed
+from .models import SavedWrap
+from django.core.serializers.json import DjangoJSONEncoder  # Add this line
+import json
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.core.exceptions import ObjectDoesNotExist
+
+from django.http import JsonResponse
+from django.shortcuts import redirect
+from django.core.exceptions import ObjectDoesNotExist
+
+@login_required
+def save_wrapped(request):
+    if request.method == "POST":
+        # Retrieve wrap data from the session
+        user = request.user
+        wrap_data = request.session.get("current_wrap_data")
+
+        if not wrap_data:
+            return JsonResponse({"error": "No wrap data to save"}, status=400)
+
+        # Check if the wrap is already saved
+        try:
+            SavedWrap.objects.get(
+                user=user,
+                top_artists=json.dumps(wrap_data["top_artists"]),
+                top_genres=json.dumps(wrap_data["top_genres"]),
+                top_tracks=json.dumps(wrap_data["top_tracks"]),
+                total_listening_time=wrap_data["total_listening_time"],
+                peak_listening_day=wrap_data["peak_listening_day"],
+            )
+            return JsonResponse({"error": "This wrap is already saved"}, status=400)
+        except ObjectDoesNotExist:
+            # Save the wrap
+            SavedWrap.objects.create(
+                user=user,
+                top_artists=json.dumps(wrap_data["top_artists"]),
+                top_genres=json.dumps(wrap_data["top_genres"]),
+                top_tracks=json.dumps(wrap_data["top_tracks"]),
+                total_listening_time=wrap_data["total_listening_time"],
+                peak_listening_day=wrap_data["peak_listening_day"],
+            )
+            return redirect("spotify_app:view_saved_wraps")
+    else:
+        return JsonResponse({"error": "Invalid request method"}, status=405)
+
+
+
+@login_required
+def replay_wrap(request, wrap_id):
+    try:
+        saved_wrap = SavedWrap.objects.get(id=wrap_id, user=request.user)
+        # Load saved data into the session for replay
+        request.session['replay_data'] = {
+            'top_genres': json.loads(saved_wrap.top_genres),
+            'top_artists': json.loads(saved_wrap.top_artists),
+            'top_tracks': json.loads(saved_wrap.top_tracks),
+            'total_listening_time': saved_wrap.total_listening_time,
+            'peak_listening_day': saved_wrap.peak_listening_day,
+        }
+        request.session['is_replay'] = True
+        request.session['current_step'] = 'top_artists'  # Start with top artists
+        return redirect('spotify_app:top_artists')
+    except SavedWrap.DoesNotExist:
+        return redirect('spotify_app:view_saved_wraps')
+from django.shortcuts import get_object_or_404
+
+@login_required
+def view_wrap(request, wrap_id):
+    saved_wrap = get_object_or_404(SavedWrap, id=wrap_id, user=request.user)
+    context = {
+        'top_artists': json.loads(saved_wrap.top_artists),
+        'top_tracks': json.loads(saved_wrap.top_tracks),
+        'top_genres': json.loads(saved_wrap.top_genres),
+        'total_listening_time': saved_wrap.total_listening_time,
+        'peak_listening_day': saved_wrap.peak_listening_day,
+    }
+    return render(request, 'spotify_app/view_wrap.html', context)

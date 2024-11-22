@@ -2,10 +2,12 @@
 
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils import timezone
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    date_joined = models.DateTimeField(auto_now_add=True)
+    date_joined = models.DateTimeField(default=timezone.now)
     spotify_user_id = models.CharField(max_length=100, blank=True, null=True)
     access_token = models.CharField(max_length=255, blank=True, null=True)
     refresh_token = models.CharField(max_length=255, blank=True, null=True)
@@ -21,3 +23,17 @@ class Feedback(models.Model):
 
     def __str__(self):
         return f"Feedback from {self.name}"
+
+from django.contrib.auth.models import User
+
+class SavedWrap(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='saved_wraps')
+    top_artists = models.JSONField()
+    top_genres = models.JSONField()
+    top_tracks = models.JSONField()
+    total_listening_time = models.IntegerField(default=0)
+    peak_listening_day = models.CharField(max_length=100, default='')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s wrap saved on {self.created_at}"
