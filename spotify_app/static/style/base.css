@@ -444,3 +444,66 @@ h2 {
     position: relative; /* Set relative positioning so it stays above the overlay */
     z-index: 1;
 }
+
+.previous-wraps-container {
+    margin-top: 20px;
+    background-color: #333;
+    border-radius: 8px;
+    padding: 20px;
+    color: #fff;
+}
+
+.previous-wraps-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.wrap-list {
+    list-style: none;
+    padding: 0;
+}
+
+.wrap-item {
+    background-color: #444;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.wrap-item p {
+    margin: 5px 0;
+}
+
+.delete-wrap-button {
+    display: inline-block;
+    margin-top: 10px;
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.delete-wrap-button:hover {
+    background-color: #c0392b;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    align-items: center;
+    gap: 15px; /* Space between buttons */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.inline-form {
+    display: inline; /* Keep the form inline with the buttons */
+}
+
+.btn-next.disabled {
+    background-color: #888; /* Grey color for disabled state */
+    cursor: not-allowed;
+    box-shadow: none;
+}
