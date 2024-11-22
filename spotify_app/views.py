@@ -28,6 +28,35 @@ from django.contrib.auth.decorators import login_required
 from .forms import FeedbackForm
 from .models import Feedback
 
+import random
+
+def game(request):
+    user_profile = UserProfile.objects.get(user=request.user)  # Get the user's profile
+    top_artists = get_top_artists(user_profile)  # Fetch top artists
+
+    # Ensure there are at least 5 artists to choose from
+    if len(top_artists) >= 5:
+        # Exclude the top artist (the first one in the list) from the shuffle
+        remaining_artists = top_artists[1:25]  # Get the next 14 artists, excluding the top artist
+
+        # Shuffle the remaining 14 artists
+        shuffled_artists = random.sample(remaining_artists, len(remaining_artists))  # Shuffle the remaining artists
+
+        # Take the first 4 artists from the shuffled list
+        artists_to_show = shuffled_artists[:4]
+
+        # Add the top artist as the 5th choice
+        artists_to_show.append(top_artists[0])  # Add the top artist to the list
+
+        # Shuffle the final list to randomize position
+        random.shuffle(artists_to_show)
+    else:
+        artists_to_show = top_artists  # If there are fewer than 5 artists, just show them all
+
+    return render(request, 'spotify_app/game.html', {'top_artists': top_artists, 'shuffled_artists': artists_to_show})
+
+
+
 
 def home(request):
     return render(request, 'spotify_app/home.html')
@@ -122,7 +151,7 @@ def get_spotify_data(url, user_profile):
 # Function to get top artists, top songs, genres, listening time, and peak day
 # Function to get top artists, top songs, genres, listening time, and peak day
 def get_top_artists(access_token):
-    url = "https://api.spotify.com/v1/me/top/artists?limit=5&time_range=long_term"
+    url = "https://api.spotify.com/v1/me/top/artists?limit=15&time_range=long_term"
     data = get_spotify_data(url, access_token)
     artists = []
     for artist in data.get('items', []):
@@ -578,7 +607,8 @@ def save_wrapped(request):
         # Retrieve wrap data from the session
         user = request.user
         wrap_data = request.session.get("current_wrap_data")
-
+        print(request.POST)
+        print(wrap_data)
         if not wrap_data:
             return JsonResponse({"error": "No wrap data to save"}, status=400)
 
@@ -639,3 +669,27 @@ def view_wrap(request, wrap_id):
         'peak_listening_day': saved_wrap.peak_listening_day,
     }
     return render(request, 'spotify_app/view_wrap.html', context)
+
+# views.py
+from datetime import datetime
+from django.shortcuts import render
+
+def base_view(request):
+    # For testing, set a specific date (e.g., Halloween)
+    test_date = datetime(2025, 10, 31)  # You can change this for testing purposes
+
+    current_month = test_date.month  # Use the test date
+    current_day = test_date.day
+
+    # Set the theme based on the date
+    if current_month == 10 and current_day == 31:
+        theme = 'halloween'
+    elif current_month == 12 and current_day == 25:
+        theme = 'christmas'
+    else:
+        theme = 'base'
+
+    # Pass the theme to the template
+    return render(request, 'base.html', {'theme': theme})
+
+from random import sample
