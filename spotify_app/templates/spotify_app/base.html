@@ -6,7 +6,7 @@
     <title>Spotify Wrapped</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     {% load static %}
-    <link id="themeStylesheet" rel="stylesheet" href="{% static 'style/base11.css' %}">
+    <link id="themeStylesheet" rel="stylesheet" href="{% static 'style/base13.css' %}">
     <link rel="stylesheet" href="{% static 'style/mobile2.css' %}">
     <link rel="stylesheet" href="{% static 'style/mobile.css' %}">
 </head>
@@ -31,9 +31,10 @@
                     <div class="custom-select" id="themeSwitcher">
                         <div class="selected-option">Select Theme</div>
                         <div class="dropdown-options">
-                            <div class="option" data-value="{% static 'style/base11.css' %}">Dark</div>
-                            <div class="option" data-value="{% static 'style/light.css' %}">Light</div>
-                            <div class="option" data-value="{% static 'style/halloween1.css' %}">Halloween</div>
+                            <div class="option" data-value="{% static 'style/base13.css' %}">Dark</div>
+                            <div class="option" data-value="{% static 'style/light1.css' %}">Light</div>
+                            <div class="option" data-value="{% static 'style/blue.css' %}">Blue</div>
+                            <div class="option" data-value="{% static 'style/halloween2.css' %}">Halloween</div>
                             <div class="option" data-value="{% static 'style/christmas1.css' %}">Christmas</div>
                         </div>
                     </div>
@@ -62,13 +63,15 @@
         if (savedTheme) {
             themeStylesheet.href = savedTheme;
             // Update the video based on the saved theme
-            if (savedTheme.includes('halloween1.css')) {
+            if (savedTheme.includes('halloween2.css')) {
                 backgroundVideo.src = "{% static 'videos/halloween.mp4' %}";  // Halloween video
             } else if (savedTheme.includes('christmas1.css')) {
                 backgroundVideo.src = "{% static 'videos/christmas.mp4' %}";  // Christmas video
-            } else if (savedTheme.includes('light.css')) {
+            } else if (savedTheme.includes('light1.css')) {
                 backgroundVideo.src = backgroundVideo.getAttribute('data-default-video');  // Default base video
-            } else if (savedTheme.includes('base11.css')) {
+            } else if (savedTheme.includes('blue.css')) {
+                backgroundVideo.src = "{% static 'videos/bluewave.mp4' %}";  // Blue video
+            } else if (savedTheme.includes('base13.css')) {
                 backgroundVideo.src = backgroundVideo.getAttribute('data-default-video');  // Default base video
             }
             // Set the dropdown to reflect the saved theme
@@ -84,7 +87,7 @@
 
             // Check if it's Halloween (October 31) or Christmas (December 25)
             if (currentMonth === 10 && currentDay === 31) {
-                themeStylesheet.href = "{% static 'style/halloween1.css' %}";
+                themeStylesheet.href = "{% static 'style/halloween2.css' %}";
                 backgroundVideo.src = "{% static 'videos/halloween.mp4' %}";  // Halloween video
                 themeSwitcher.querySelector('.selected-option').textContent = "Halloween"; // Update selection text
             } else if (currentMonth === 12 && currentDay === 25) {
@@ -92,7 +95,7 @@
                 backgroundVideo.src = "{% static 'videos/christmas.mp4' %}";  // Christmas video
                 themeSwitcher.querySelector('.selected-option').textContent = "Christmas"; // Update selection text
             } else {
-                themeStylesheet.href = "{% static 'style/base11.css' %}";
+                themeStylesheet.href = "{% static 'style/base13.css' %}";
                 backgroundVideo.src = backgroundVideo.getAttribute('data-default-video');  // Default base video
                 themeSwitcher.querySelector('.selected-option').textContent = "Dark"; // Update selection text
             }
@@ -124,12 +127,14 @@
             themeStylesheet.href = newTheme;
 
             // Change the background video based on the selected theme
-            if (newTheme.includes('halloween1.css')) {
+            if (newTheme.includes('halloween2.css')) {
                 backgroundVideo.src = "{% static 'videos/halloween.mp4' %}";  // Halloween video
             } else if (newTheme.includes('christmas1.css')) {
                 backgroundVideo.src = "{% static 'videos/christmas.mp4' %}";  // Christmas video
-            } else if (newTheme.includes('light.css')) {
+            } else if (newTheme.includes('light1.css')) {
                 backgroundVideo.src = backgroundVideo.getAttribute('data-default-video');  // Default base video
+             } else if (newTheme.includes('blue.css')) {
+                backgroundVideo.src = "{% static 'videos/bluewave.mp4' %}";  // Blue video
             } else {
                 // No video change for dark.css
                 backgroundVideo.src = backgroundVideo.getAttribute('data-default-video'); // Keep default video

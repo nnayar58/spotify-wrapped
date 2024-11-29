@@ -1,8 +1,3 @@
-body {
-    background-color: #fafafa;
-    color: #000000;
-}
-
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -11,34 +6,8 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Specific Background Colors for Flow Pages */
-body.top-tracks {
-    background-image: url('../videos/bluewave.jpg');
-    background-size: cover; /* Ensure the GIF covers the entire viewport */
-    background-position: center; /* Center the GIF */
-    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
-}
-body.top-artists {
-    background-image: url('../videos/purplewave.jpg');
-    background-size: cover; /* Ensure the GIF covers the entire viewport */
-    background-position: center; /* Center the GIF */
-    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
-}
-body.top-genres {
-    background-image: url('../videos/pinkwave.jpg');
-    background-size: cover; /* Ensure the GIF covers the entire viewport */
-    background-position: center; /* Center the GIF */
-    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
-}
-body.game-artist {
-    background-image: url('../videos/purplewave.jpg');
-    background-size: cover; /* Ensure the GIF covers the entire viewport */
-    background-position: center; /* Center the GIF */
-    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
-}
-
-body.game-track {
-    background-image: url('../videos/bluewave.jpg');
+body {
+    background-image: url('../videos/halloween.jpg');
     background-size: cover; /* Ensure the GIF covers the entire viewport */
     background-position: center; /* Center the GIF */
     background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
@@ -60,100 +29,37 @@ body.game-track {
     right: 0;
     bottom: 0;
     z-index: -1; /* Keep overlay behind the image */
-    display: flex; /* Initially hidden */
+    display: flex;
     justify-content: center;
     align-items: center;
-    pointer-events: none; /* Ensure it doesn't block interaction */
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    pointer-events: none;
 }
 
+@keyframes fadeEffect {
+    0% {
+        opacity: 0;
+    }
+    15% {
+        opacity: 1;
+    }
+    95% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
 /* GIF image size */
 .gif-img {
-    min-width: 120vw; /* Adjust the size as needed */
-    max-height: 70vh;
-    margin-right: 50px;
-    margin-bottom: 70px;
+    background-image: url('../halloween/bat_animation.gif');
+    margin-top:150px;
+    min-width: 110vw; /* Adjust the size as needed */
+    min-height: 110vh;
+    background-repeat: no-repeat; /* Ensure the gif doesn't repeat */
+    background-position: center; /* Center the gif */
+    background-size: contain; /
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3)); /* Add shadow */
-
-}
-
-/* Show overlay when hovering over the .top-image */
-.top-image:hover + .gif-overlay {
-    opacity: 0.3; /* Adjust transparency */
-}
-
-/* Ensure the top-image stays above the gif-overlay */
-.top-image {
-    position: relative; /* Set relative positioning for stacking context */
-    z-index: 1; /* Ensure image stays above the overlay */
-}
-/* Navbar Styles */
-.navbar {
-    background-color: black;
-    opacity: 0.95;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1000;
-}
-
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-.logo {
-    color: #fff;
-    font-size: 1.8rem;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.logo-green {
-    color: #1DB954;
-}
-
-.nav-menu {
-    position: relative;
-}
-
-.nav-button {
-    color: #fff;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.dropdown-menu {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: #333;
-    border-radius: 8px;
-    padding: 10px 0;
-    display: none;
-}
-
-.dropdown-menu.show {
-    display: block;
-}
-
-.dropdown-item {
-    color: #fff;
-    padding: 10px 20px;
-    text-decoration: none;
-}
-
-.dropdown-item:hover {
-    background-color: #1DB954;
+    animation: fadeEffect  5.17s infinite; /* Adjust 5s to match your GIF's duration */
 }
 
 /* Main Content */
@@ -231,18 +137,7 @@ ul li2 {
     width: 80%;
     text-align: center;
 }
-ul li3 {
-    padding: 20px;
-    margin: 10px 0;
-    border-radius: 8px;
-    color: #fff;
-    font-size: 1.1rem;
-    transition: background-color 0.3s ease;
-    animation: slideIn 0.4s ease forwards;
-    opacity: 0;
-    width: 80%;
-    text-align: center;
-}
+
 @keyframes slideIn {
     from { transform: translateX(-20px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
@@ -312,7 +207,7 @@ ul li:hover {
 }
 
 .profile-header {
-    background-color: #e0e0e0;
+    background-color: #333;
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -334,7 +229,7 @@ ul li:hover {
 }
 
 .connection-box {
-    background-color: #e0e0e0;
+    background-color: #333;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
@@ -474,3 +369,23 @@ h3 {
     padding: 20px;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
+
+
+.navbar {
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+
+.logo {
+    color: white;
+}
+
+.nav-button {
+    color: white;
+}
+
+.final-summary-container ul li {
+    background-color: rgb(0, 0, 0,.6);
+}
+
+

@@ -1,17 +1,17 @@
 {% extends "spotify_app/base.html" %}
 {% load static %}
 {% block content %}
-<video class="video-background" autoplay loop muted playsinline>
+<body class="listening-habits">
+<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/greenwave.mp4' %}">
     <source src="{% static 'videos\greenwave.mp4' %}" type="video/mp4">
 </video>
 
 <h1>Your Listening Habits</h1>
 
-<h3 style="text-shadow: 0 1px 10px rgba(0, 0, 0, 1);">
-    <div><span style="font-weight:bold; margin-bottom:-20px;">Peak Listening Day <br>of the Week: </span><br><span style="font-size: 3rem;">{{ peak_listening_day }}</span></div>
-    <div><span style="font-weight:bold; margin-bottom:-20px;"><br><br>Total Listening Time <br>in Last 3 Days: </span><br><span style="font-size: 3rem;">{{ total_listening_time }} minutes</span></div>
-
-    <div><span style="font-weight:bold; margin-bottom:-20px;"><br><br>Peak Listening Time <br>of the Day: </span><br><span style="font-size: 3rem;">{{ peak_listening_time_of_day }}</span></div>
+<h3 style="font-weight:200;" >
+    <div><span style=" margin-bottom:-20px;">Peak Listening Day <br>of the Week: </span><br><span style="font-size: 3rem; font-weight:500;">{{ peak_listening_day }}</span></div>
+    <div><span style=" margin-bottom:-20px;"><br><br>Total Listening Time <br>in Last 3 Days: </span><br><span style="font-size: 3rem; font-weight:500;">{{ total_listening_time }} minutes</span></div>
+    <div><span style=" margin-bottom:-20px;"><br><br>Peak Listening Time <br>of the Day: </span><br><span style="font-size: 3rem; font-weight:500;">{{ peak_listening_time_of_day }}</span></div>
 </h3>
 
 <a href="{% url 'spotify_app:top_genres' %}" class="btn-prev">Previous</a>

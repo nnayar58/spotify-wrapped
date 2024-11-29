@@ -37,7 +37,6 @@
         display: flex;
         align-items: center; /* Vertically align the items */
         height: 107px;
-        background-color: rgb(0,0,0,.5);
     }
 
     ul li img {
@@ -111,7 +110,6 @@
             align-items: center; /* Vertically align the items */
             height: 80px;
             max-width: 185px;
-            background-color: rgb(0,0,0,.5);
             overflow: hidden; /* Hide any overflow */
         }
 
@@ -176,7 +174,7 @@
         }
     }
 </style>
-
+<body class="final-summary">
 <video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/orangewave.mp4' %}">
     <source src="{% static 'videos\orangewave.mp4' %}" type="video/mp4">
 </video>
@@ -254,7 +252,7 @@
         </ul>
     </div>
 </div>
-
+</body>
 <a href="{% url 'spotify_app:listening_habits' %}" class="btn-prev">Previous</a>
 
 <!-- Next Button -->
