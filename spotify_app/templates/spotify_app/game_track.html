@@ -1,7 +1,6 @@
 {% extends "spotify_app/base.html" %}
 {% block content %}
 {% load static %}
-<link rel="stylesheet" href="{% static 'style/mobile.css' %}">
 <body class="game-track">
 <video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/bluewave.mp4' %}">
     <source src="{% static 'videos/bluewave.mp4' %}" type="video/mp4">
@@ -26,22 +25,22 @@
         </li2>
     </ul>
     {% endif %}
-    <button class="btn-top-5" id="top5Btn" style="position: absolute; top: 90%;left: 50%;transform: translate(-50%, -50%); z-index: 1000;">Show Track Choices</button>
+    <button class="btn-top-5" id="top5Btn">Show Track Choices</button>
 </div>
 <div id="top-5-game" style="display:none; flex-direction: column; justify-content: center;">
     <div class="top-5-game" style="justify-content: center; ">
         <div class="track-choices">
-            <ul id="track-list" style="display: flex; flex-direction: row; justify-content: center; flex-wrap: wrap; list-style: none; margin-top:75px;">
+            <ul class="track-list" id="track-list">
                 {% for track in shuffled_track %}
-                <li class="track-choice" data-name="{{ track.name }}" style="margin: 20px; padding: 25px; width: 250px; text-align: center; cursor: pointer;">
-                    <img src="{{ track.image_url }}" alt="{{ track.name }}" style="width: 200px; height: 200px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+                <li class="track-choice" data-name="{{ track.name }}" >
+                    <img class="track-choice-img" src="{{ track.image_url }}" alt="{{ track.name }}">
                     <div style="font-size: 20px; margin-top: 10px;">{{ track.name }}</div>
                 </li>
                 {% endfor %}
             </ul>
         </div>
     </div>
-    <button class="btn-top-5" id="top1Btn" style="position: absolute; top: 90%;left: 50%;transform: translate(-50%, -50%); z-index: 1000;">Listen Again</button>
+    <button class="btn-top-6" id="top1Btn">Listen Again</button>
 </div>
 
 

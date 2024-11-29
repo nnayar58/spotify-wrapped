@@ -297,14 +297,40 @@ def get_top_genres(access_token):
 
     return genres_with_images
 
-
+import time
+from datetime import datetime, timedelta
 
 def get_total_listening_time(user_profile):
+    one_week_ago = datetime.now() - timedelta(days=3)
+
+    # Convert to Unix timestamp (milliseconds)
+    one_week_ago_timestamp = int(one_week_ago.timestamp() * 1000)
+
+    # API URL to get recently played tracks
     url = "https://api.spotify.com/v1/me/player/recently-played?limit=50"
+
+    total_ms = 0
     data = get_spotify_data(url, user_profile)
-    total_ms = sum(item['track']['duration_ms'] for item in data.get('items', []))
-    total_hours = round(total_ms / (1000 * 60 * 60), 2)
-    return total_hours
+
+    # Iterate through the data and filter out tracks played in the past week
+    while data:
+        for item in data.get('items', []):
+            played_at = item['played_at']
+            played_at_timestamp = int(datetime.strptime(played_at, '%Y-%m-%dT%H:%M:%S.%fZ').timestamp() * 1000)
+
+            # Only sum the duration if the track was played in the past week
+            if played_at_timestamp >= one_week_ago_timestamp:
+                total_ms += item['track']['duration_ms']
+
+        # Check if there's another page of results (pagination)
+        if 'next' in data and data['next']:
+            data = get_spotify_data(data['next'], user_profile)
+        else:
+            break
+
+    # Convert total milliseconds to hours and minutes
+    total_minutes = round(total_ms / (1000 * 60), 2)
+    return total_minutes
 
 from dateutil import parser
 
@@ -314,6 +340,23 @@ def get_peak_listening_day(user_profile):
     days = [parser.isoparse(item['played_at']).strftime('%A') for item in data.get('items', [])]
     return Counter(days).most_common(1)[0][0] if days else None
 
+from collections import Counter
+from dateutil import parser
+
+def get_peak_listening_time_of_day(user_profile):
+    url = "https://api.spotify.com/v1/me/player/recently-played?limit=50"
+    data = get_spotify_data(url, user_profile)
+    hours = [parser.isoparse(item['played_at']).hour for item in data.get('items', [])]
+    peak_hour = Counter(hours).most_common(1)[0][0] if hours else None
+
+    if peak_hour is not None:
+        if peak_hour < 12:
+            return "Morning"
+        elif peak_hour < 18:
+            return "Afternoon"
+        else:
+            return "Evening"
+    return "Evening"
 
 
 # View to display Spotify summary
@@ -325,6 +368,7 @@ def spotify_summary(request):
     top_genres = get_top_genres(user_profile)
     total_listening_time = get_total_listening_time(user_profile)
     peak_listening_day = get_peak_listening_day(user_profile)
+    peak_listening_time_of_day = get_peak_listening_time_of_day(user_profile)
 
     context = {
         "top_artists": top_artists,
@@ -332,6 +376,7 @@ def spotify_summary(request):
         "top_genres": top_genres,
         "total_listening_time": total_listening_time,
         "peak_listening_day": peak_listening_day,
+        "peak_listening_time_of_day": peak_listening_time_of_day,
     }
 
     return render(request, 'spotify_app/spotify_summary.html', context)
@@ -456,9 +501,11 @@ def listening_habits(request):
     if request.session.get('is_replay'):
         total_listening_time = request.session['replay_data']['total_listening_time']
         peak_listening_day = request.session['replay_data']['peak_listening_day']
+        peak_listening_time_of_day = request.session['replay_data']['peak_listening_time_of_day']
         context = {
             'total_listening_time': total_listening_time,
             'peak_listening_day': peak_listening_day,
+            'peak_listening_time_of_day': peak_listening_time_of_day,
             'is_replay': True
         }
         if request.session.get('current_step') == 'listening_habits':
@@ -471,9 +518,11 @@ def listening_habits(request):
         user_profile = UserProfile.objects.get(user=request.user)
         total_listening_time = get_total_listening_time(user_profile)
         peak_listening_day = get_peak_listening_day(user_profile)
+        peak_listening_time_of_day = get_peak_listening_time_of_day(user_profile)
         return render(request, 'spotify_app/listening_habits.html', {
             'total_listening_time': total_listening_time,
             'peak_listening_day': peak_listening_day,
+            'peak_listening_time_of_day': peak_listening_time_of_day,
         })
 
 @login_required
@@ -494,6 +543,7 @@ def final_summary(request):
             'top_tracks': get_top_tracks(user_profile),
             'total_listening_time': get_total_listening_time(user_profile),
             'peak_listening_day': get_peak_listening_day(user_profile),
+            'peak_listening_time_of_day': get_peak_listening_time_of_day(user_profile),
             'is_replay': False,
         }
     return render(request, 'spotify_app/final_summary.html', context)
@@ -700,7 +750,7 @@ def game_track(request):
     # Ensure there are at least 5 tracks to select from
     if len(top_tracks) >= 5:
         # Randomly select one track from the top 6-30 as the "correct track"
-        correct_track = random.choice(top_tracks[5:30])
+        correct_track = random.choice(top_tracks[5:20])
 
         # Exclude the correct track from the remaining pool
         remaining_tracks = [track for track in top_tracks if track != correct_track]

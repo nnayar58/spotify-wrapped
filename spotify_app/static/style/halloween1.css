@@ -1,8 +1,3 @@
-body {
-    background-color: #fafafa;
-    color: #000000;
-}
-
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -11,73 +6,60 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+body {
+    background-image: url('../videos/halloween.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
 
-/* Navbar Styles */
-.navbar {
-    background-color: black;
-    opacity: 0.95;
+.video-background {
     position: fixed;
     top: 0;
+    left: 0;
     width: 100%;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1000;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
 }
-
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
-
-.logo {
-    color: #fff;
-    font-size: 1.8rem;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.logo-green {
-    color: #1DB954;
-}
-
-.nav-menu {
-    position: relative;
-}
-
-.nav-button {
-    color: #fff;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.dropdown-menu {
+.gif-overlay {
     position: absolute;
+    top: 0;
+    left: 0;
     right: 0;
-    top: 100%;
-    background-color: #333;
-    border-radius: 8px;
-    padding: 10px 0;
-    display: none;
+    bottom: 0;
+    z-index: -1; /* Keep overlay behind the image */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
 }
 
-.dropdown-menu.show {
-    display: block;
+@keyframes fadeEffect {
+    0% {
+        opacity: 0;
+    }
+    15% {
+        opacity: 1;
+    }
+    95% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
 }
-
-.dropdown-item {
-    color: #fff;
-    padding: 10px 20px;
-    text-decoration: none;
-}
-
-.dropdown-item:hover {
-    background-color: #1DB954;
+/* GIF image size */
+.gif-img {
+    background-image: url('../halloween/bat_animation.gif');
+    margin-top:150px;
+    min-width: 110vw; /* Adjust the size as needed */
+    min-height: 110vh;
+    background-repeat: no-repeat; /* Ensure the gif doesn't repeat */
+    background-position: center; /* Center the gif */
+    background-size: contain; /
+    filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3)); /* Add shadow */
+    animation: fadeEffect  5.17s infinite; /* Adjust 5s to match your GIF's duration */
 }
 
 /* Main Content */
@@ -225,7 +207,7 @@ ul li:hover {
 }
 
 .profile-header {
-    background-color: #e0e0e0;
+    background-color: #333;
     border-radius: 12px;
     padding: 20px;
     display: flex;
@@ -247,7 +229,7 @@ ul li:hover {
 }
 
 .connection-box {
-    background-color: #e0e0e0;
+    background-color: #333;
     border-radius: 12px;
     padding: 20px;
     margin-bottom: 20px;
@@ -386,4 +368,8 @@ h3 {
     text-align: center; /* Center horizontally */
     padding: 20px;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 400px) {
+
 }

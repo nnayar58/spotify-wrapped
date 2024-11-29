@@ -311,14 +311,6 @@ ul li:hover {
     color: #FFA500;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    h1 { font-size: 2rem; }
-    ul li { font-size: 1rem; }
-    .btn-next { font-size: 1em; padding: 8px 16px; }
-}
-
-
 /* Container for the left and right halves */
 .top-5 {
     display: flex;
@@ -436,4 +428,19 @@ h3 {
     text-align: center; /* Center horizontally */
     padding: 20px;
     text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+@media (max-width: 400px) {
+    .gif-img {
+        background-image: url('.gif');
+        margin-top: 150px;
+        max-width: 200px; /* Set the width to match the viewport */
+
+        background-repeat: no-repeat; /* Ensure the gif doesn't repeat */
+        background-position: center; /* Center the gif */
+        background-size: cover; /* Cover the container, cropping excess */
+        overflow: hidden;
+        filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3)); /* Add shadow */
+        animation: fadeEffect 5.17s infinite; /* Adjust 5s to match your GIF's duration */
+    }
 }

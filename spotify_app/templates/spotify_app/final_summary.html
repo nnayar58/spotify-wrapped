@@ -2,10 +2,6 @@
 {% load static %}
 {% block content %}
 <style>
-    p {
-        margin: 10px;
-    }
-
     .final-summary-container {
         display: flex;
         flex-wrap: wrap;
@@ -19,9 +15,12 @@
     }
 
     h2 {
+        color: white;
         text-align: center;
         font-size: 1.5em;
-        margin-bottom: -10px;
+        margin-top: 0px;
+        margin-bottom: -20px;
+        text-shadow: 0 1px 8x rgba(0, 0, 0, 0.9);
     }
 
     h1 {
@@ -37,7 +36,7 @@
         margin-bottom: 0px; /* Space between list items */
         display: flex;
         align-items: center; /* Vertically align the items */
-        height: 115px;
+        height: 107px;
         background-color: rgb(0,0,0,.5);
     }
 
@@ -59,32 +58,126 @@
         text-align: center; /* Center the text horizontally */
     }
 
-    social-share-buttons {
+    social-share-buttons, .save-btn{
         display: flex;
         justify-content: space-around;
-        margin-top: 20px;
     }
     .social-share-buttons a {
-        padding: 10px;
+        padding: 10px 0px;
         background-color: #0077b5; /* LinkedIn color */
         border-radius: 5px;
         color: white;
         text-decoration: none;
         font-weight: bold;
         font-size: 16px;
+        margin: 3px;
+    }
+    .save-btn a{
+        padding: 20px 0px;
+        background-color: #0077b5; /* LinkedIn color */
+        border-radius: 10px;
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 16px;
+        margin: 3px;
+        background-color: #189946;
     }
     .social-share-buttons .twitter {
-        background-color: #1DA1F2; /* Twitter color */
-    }
-    .social-share-buttons .linkedin {
-        background-color: #0077b5; /* LinkedIn color */
+        background-color: #1cad4f;
     }
     .social-share-buttons .messages {
-        background-color: #34b7f1; /* WhatsApp color */
+        background-color: #22c95d;
+    }
+
+    ul li div span1 {
+        margin-top: 5px;
+        font-size: 20px;
+        font-weight:100;
+    }
+
+    @media (max-width: 400px) {
+        .final-summary-container {
+            margin-bottom: 70px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        ul li {
+            margin-bottom: 0px; /* Space between list items */
+            display: flex;
+            align-items: center; /* Vertically align the items */
+            height: 80px;
+            max-width: 185px;
+            background-color: rgb(0,0,0,.5);
+            overflow: hidden; /* Hide any overflow */
+        }
+
+        ul li img {
+            margin-right: 15px; /* Space between the image and text */
+            border-radius: 5px;
+            margin-left: -5px;
+        }
+
+        ul li div {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Vertically center the text */
+            flex-grow: 1; /* Ensure it takes up the remaining space next to the image */
+            overflow-x: auto;
+        }
+
+        ul li div span {
+            font-weight: 600;
+            text-align: center; /* Center the text horizontally */
+            word-wrap: break-word; /* Break long words to fit the container */
+            hyphens: auto; /* Add hyphenation where needed */
+            overflow-wrap: break-word; /* Ensure long words break properly */
+            display: inline-block; /* Allow the span to extend horizontally */
+            min-width: 100%; /* Ensure the span has a minimum width */
+            font-size: .8rem;
+        }
+
+        h2 {
+            color: white;
+            text-align: center;
+            font-size: 1.1em;
+            margin-top: 20px;
+            margin-bottom: -20px;
+            text-shadow: 0 1px 8x rgba(0, 0, 0, 0.9);
+        }
+        ul li div span1 {
+            margin-top: 5px;
+            font-size: 1rem;
+            font-weight:100;
+        }
+        .social-share-buttons a {
+            padding: 5px 0px;
+            background-color: #0077b5; /* LinkedIn color */
+            border-radius: 5px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            margin: 3px;
+        }
+        .save-btn a{
+            padding: 5px 0px;
+            background-color: #0077b5; /* LinkedIn color */
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            margin: 3px;
+            background-color: #189946;
+        }
     }
 </style>
 
-<video class="video-background" autoplay loop muted playsinline>
+<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/orangewave.mp4' %}">
     <source src="{% static 'videos\orangewave.mp4' %}" type="video/mp4">
 </video>
 <h1>Your Spotify Year in Review</h1>
@@ -93,9 +186,9 @@
     <div>
         <h2>Top Artists</h2>
         <ul>
-            {% for artist in top_artists %}
+            {% for artist in top_artists|slice:":5" %}
             <li>
-                <img src="{{ artist.image_url }}" alt="{{ artist.name }}" style="width: 90px; height: 90px;">
+                <img class="final-image" src="{{ artist.image_url }}" alt="{{ artist.name }}">
                 <div>#{{ forloop.counter }}. <span>{{ artist.name }}</span></div>
             </li>
             {% endfor %}
@@ -105,11 +198,10 @@
     <div>
         <h2>Top Tracks</h2>
         <ul>
-            {% for track in top_tracks %}
+            {% for track in top_tracks|slice:":5" %}
             <li>
-                <img src="{{ track.image_url }}" alt="{{ track.name }}" style="width: 90px; height: 90px;">
+                <img class="final-image" src="{{ track.image_url }}" alt="{{ track.name }}">
                 <div>#{{ forloop.counter }}. <span>{{ track.name }}</span>
-                    <span style="font-size: 0.9em; font-weight:100;"> - {{ track.artist }}</span>
                 </div>
             </li>
             {% endfor %}
@@ -121,7 +213,7 @@
         <ul>
             {% for genre in top_genres %}
             <li>
-                <img src="{{ genre.image_url }}" alt="{{ genre.name }}" style="width: 90px; height: 90px;">
+                <img class="final-image" src="{{ genre.image_url }}" alt="{{ genre.name }}">
                 <div>#{{ forloop.counter }}. <span>{{ genre.name }}</span></div>
             </li>
             {% endfor %}
@@ -132,10 +224,19 @@
         <h2>Listening Habits</h2>
         <ul>
             <li>
-                <p>Peak Listening Day: <br>{{ peak_listening_day }}</p>
-                <p>Total Listening Time: <br>{{ total_listening_time }} hours</p>
+                <div><span style="font-weight:600; margin-bottom:-20px;">Peak Listening Day <br>of the Week: </span><br><span1>{{ peak_listening_day }}</span1></div>
             </li>
-
+            <li>
+                <div><span style="font-weight:600; margin-bottom:-20px;">Total Listening Time <br>in Last 3 Days:</br> </span><br><span1>{{ total_listening_time }} minutes</span1></div>
+            </li>
+            <li>
+                <div><span style="font-weight:600; margin-bottom:-20px;">Peak Listening Time <br>of the Day: </span><br><span1>{{ peak_listening_time_of_day }}</span1></div>
+            </li>
+            <li>
+                <div class="save-btn">
+                    <a>Save Your Wrapped!</a>
+                </div>
+            </li>
             <li>
                 <div class="social-share-buttons">
                     <!-- X (Twitter) Share Button -->

@@ -1,6 +1,10 @@
 {% extends "spotify_app/base.html" %}
-
+{% load static %}
 {% block content %}
+<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/.mp4' %}">
+    <source src="{% static 'videos/.mp4' %}" type="video/mp4">
+</video>
+
 <div class="profile-container">
     <!-- Profile Header -->
     <div class="profile-header">

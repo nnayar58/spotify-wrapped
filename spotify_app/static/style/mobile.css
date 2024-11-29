@@ -114,13 +114,6 @@
         font-size: 1.2rem;
         text-align: center;
     }
-    .navbar {
-        padding: 10px;
-    }
-
-    .nav-button {
-        font-size: 1rem;
-    }
 
     /* Adjust list item font size */
     ul li {
@@ -142,8 +135,12 @@
 
     /* Button Adjustments */
     .btn-top-5 {
-        padding: 12px 18px;
-        font-size: 14px;
-        margin-top: -10px;
+        position: absolute;
+        top: 85%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1000;
     }
+
+
 }

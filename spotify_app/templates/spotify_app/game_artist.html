@@ -21,15 +21,15 @@
         </li2>
     </ul>
     {% endif %}
-    <button class="btn-top-5" id="top5Btn" style="position: absolute; top: 90%;left: 50%;transform: translate(-50%, -50%); z-index: 1000;">Show Artist Choices</button>
+    <button class="btn-top-5" id="top5Btn">Show Artist Choices</button>
 </div>
 
 <div class="top-5-game" id="top-5-game" style="display: none; justify-content: center; ">
     <div class="artist-choices">
-        <ul id="artist-list" style="display: flex; flex-direction: row; flex-wrap: wrap; list-style: none; margin-top:75px;">
+        <ul id="artist-list" class="artist-list">
             {% for artist in shuffled_artists %}
-            <li class="artist-choice" data-name="{{ artist.name }}" style="margin: 20px; padding: 25px; width: 250px; text-align: center; cursor: pointer;">
-                <img src="{{ artist.image_url }}" alt="{{ artist.name }}" style="width: 200px; height: 200px; border-radius: 8px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+            <li class="artist-choice" data-name="{{ artist.name }}">
+                <img class="artist-choice-img" src="{{ artist.image_url }}" alt="{{ artist.name }}">
                 <div style="font-size: 20px; margin-top: 10px;">{{ artist.name }}</div>
             </li>
             {% endfor %}
