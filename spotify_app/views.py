@@ -137,15 +137,17 @@ def get_top_artists(access_token):
 def get_top_tracks(access_token):
     url = "https://api.spotify.com/v1/me/top/tracks?limit=50&time_range=long_term"  # Last 12 months
     data = get_spotify_data(url, access_token)
-    print("Top Tracks Data:", data)  # Debugging line
+    # print("Top Tracks Data:", data)  # Debugging line
     return [
         {
-            'name': track['name'],
-            'artist': track['artists'][0]['name'],  # Get the first artist's name
-            'image_url': track['album']['images'][0]['url'],  # Get the album image URL
+            'name': track.get('name', 'Unknown Track'),  # Use default if 'name' is missing
+            'artist': track.get('artists', [{'name': 'Unknown Artist'}])[0].get('name', 'Unknown Artist')
+            if track.get('artists') else 'Unknown Artist',  # Handle missing artists
+            'image_url': track.get('album', {}).get('images', [{'url': None}])[0].get('url', None)
+            if track.get('album', {}).get('images') else None,  # Handle missing images
             'preview_url': track.get('preview_url')  # Get the preview URL, if available
         }
-        for track in data.get('items', [])
+        for track in data.get('items', []) if isinstance(track, dict)  # Ensure each 'track' is a dictionary
     ]
 
 
@@ -745,8 +747,9 @@ import random
 
 def game_track(request):
     user_profile = UserProfile.objects.get(user=request.user)  # Get the user's profile
+    
     top_tracks = get_top_tracks(user_profile)  # Fetch top tracks
-
+    # print("Length of Top Tracks: ", len(top_tracks))
     # Ensure there are at least 5 tracks to select from
     if len(top_tracks) >= 5:
         # Randomly select one track from the top 6-30 as the "correct track"
