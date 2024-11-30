@@ -1,3 +1,8 @@
+body {
+    background-color: #fafafa;
+    color: #000000;
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -7,12 +12,11 @@
 }
 
 body {
-    background-image: url('../videos/christmas.jpg');
+    background-image: url('../videos/bluewave.jpg');
     background-size: cover; /* Ensure the GIF covers the entire viewport */
     background-position: center; /* Center the GIF */
     background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
 }
-
 .video-background {
     position: fixed;
     top: 0;
@@ -22,7 +26,6 @@ body {
     object-fit: cover;
     z-index: -1;
 }
-
 .gif-overlay {
     position: absolute;
     top: 0;
@@ -30,21 +33,33 @@ body {
     right: 0;
     bottom: 0;
     z-index: -1; /* Keep overlay behind the image */
-    display: flex;
+    display: flex; /* Initially hidden */
     justify-content: center;
     align-items: center;
-    pointer-events: none;
+    pointer-events: none; /* Ensure it doesn't block interaction */
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
+/* GIF image size */
 .gif-img {
-    background-image: url('../christmas/snow.gif');
-    margin-top:-110px;
-    min-width: 100vw; /* Adjust the size as needed */
-    min-height: 100vh;
-    background-repeat: no-repeat; /* Ensure the gif doesn't repeat */
-    background-position: center; /* Center the gif */
-    background-size: contain; /
+    min-width: 120vw; /* Adjust the size as needed */
+    max-height: 70vh;
+    margin-right: 50px;
+    margin-bottom: 70px;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3)); /* Add shadow */
+
+}
+
+/* Show overlay when hovering over the .top-image */
+.top-image:hover + .gif-overlay {
+    opacity: 0.3; /* Adjust transparency */
+}
+
+/* Ensure the top-image stays above the gif-overlay */
+.top-image {
+    position: relative; /* Set relative positioning for stacking context */
+    z-index: 1; /* Ensure image stays above the overlay */
 }
 /* Main Content */
 .main-content {
@@ -68,10 +83,11 @@ body {
 /* Typography */
 h1 {
     font-size: 2.5rem;
-    color: black;
+    color: white;
     margin-bottom: 20px;
     text-align: center; /* Center horizontally */
     padding: 20px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
 }
 
 /* Fade-in Animation for Pages */
@@ -96,11 +112,11 @@ ul {
 }
 
 ul li {
-    background-color: rgb(0,0,0,.6);
+    background-color: rgb(232, 251, 255,.6);
     padding: 15px;
     margin: 10px 0;
     border-radius: 8px;
-    color: #fff;
+    color: black;
     font-size: 1.1rem;
     transition: background-color 0.3s ease;
     animation: slideIn 0.4s ease forwards;
@@ -121,7 +137,18 @@ ul li2 {
     width: 80%;
     text-align: center;
 }
-
+ul li3 {
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+    animation: slideIn 0.4s ease forwards;
+    opacity: 0;
+    width: 80%;
+    text-align: center;
+}
 @keyframes slideIn {
     from { transform: translateX(-20px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
@@ -135,14 +162,12 @@ ul li:nth-child(4) { animation-delay: 0.4s; }
 ul li:nth-child(5) { animation-delay: 0.5s; }
 
 ul li:hover {
-    background-color: rgb(0,0,0,.3);
+    background-color:  rgb(232, 251, 255,.3);
 }
 
 /* Button Styling */
 .btn-next,
-.btn-prev,
-.connect-button,
-.full-stats-button {
+.btn-prev{
     display: inline-block;
     padding: 10px 20px;
     background-color: #1DB954;
@@ -157,8 +182,6 @@ ul li:hover {
 }
 
 .btn-next:hover,
-.connect-button:hover,
-.full-stats-button:hover,
 .btn-prev:hover {
     background-color: #17a847;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -181,50 +204,6 @@ ul li:hover {
     position: fixed;
     right: 20px; /* Position 20px from the right edge */
     bottom: 20px; /* Position 20px from the bottom edge */
-}
-
-/* Profile Styles */
-.profile-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.profile-header {
-    background-color: #333;
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.profile-icon {
-    background-color: #1DB954;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    color: #000;
-    margin-right: 20px;
-}
-
-.connection-box {
-    background-color: #333;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.status-connected {
-    color: #1DB954;
-}
-
-.status-not-connected {
-    color: #FFA500;
 }
 
 /* Responsive Adjustments */
@@ -269,18 +248,18 @@ ul li:hover {
 }
 
 .right-half ul li {
-    background-color: rgb(0,0,0,.6);
+    background-color: rgb(232, 251, 255,.6);
     padding: 15px;
     margin: 10px 0;
     border-radius: 8px;
-    color: #fff;
+    color: black;
     font-size: 1.1rem;
     transition: background-color 0.3s ease;
     text-align: center;
 }
 
 .right-half ul li:hover {
-    background-color: rgb(0,0,0,.3);
+    background-color: rgb(232, 251, 255,.3);
 }
 
 /* Button Styling */
@@ -297,13 +276,11 @@ ul li:hover {
     display: block; /* Makes the button a block-level element */
     margin: 20px auto; /* Centers the button horizontally */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    z-index: 2; /* Keep overlay behind the image */
 
 }
 
 .btn-top-5:hover {
     background-color: #1ed760; /* Lighter green for hover effect */
-    z-index: 2; /* Keep overlay behind the image */
 }
 
 .btn-top-5:focus {
@@ -350,8 +327,35 @@ h2 {
 
 h3 {
     font-size: 1.5rem;
-    color: white;
+    color: black;
     text-align: center; /* Center horizontally */
     padding: 20px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    text-shadow: 0 2px 8px rgba(232, 251, 255, 0.7);
+}
+
+.navbar {
+    background-color: rgb(84, 126, 199, .95);
+}
+
+.logo {
+    color: black;
+}
+
+.nav-button {
+    color: black;
+}
+
+.final-summary-container ul li {
+    background-color: rgb(232, 251, 255,.6);
+}
+
+.profile-container {
+    color: #fff;
+}
+.profile-header {
+    background-color: rgb(232, 251, 255,.6);
+}
+/* Connection Box */
+.connection-box, .stats-container  {
+    background-color: rgb(232, 251, 255,.6);
 }

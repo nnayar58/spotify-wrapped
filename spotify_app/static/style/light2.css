@@ -1,3 +1,8 @@
+body {
+    background-color: #fafafa;
+    color: #000000;
+}
+
 /* Reset and Base Styles */
 * {
     margin: 0;
@@ -6,8 +11,52 @@
     font-family: 'Montserrat', sans-serif;
 }
 
-body {
-    background-image: url('../videos/halloween.jpg');
+/* Specific Background Colors for Flow Pages */
+body.top-tracks {
+    background-image: url('../videos/bluewave.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
+body.top-artists {
+    background-image: url('../videos/purplewave.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
+body.top-genres {
+    background-image: url('../videos/pinkwave.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
+body.game-artist {
+    background-image: url('../videos/purplewave.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
+body.game-track {
+    background-image: url('../videos/bluewave.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
+body.final-summary {
+    background-image: url('../videos/orangewave.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
+body.listening-habits {
+    background-image: url('../videos/greenwave.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
+
+body.profile {
+    background-image: url('../videos/greenwave.jpg');
     background-size: cover; /* Ensure the GIF covers the entire viewport */
     background-position: center; /* Center the GIF */
     background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
@@ -29,107 +78,34 @@ body {
     right: 0;
     bottom: 0;
     z-index: -1; /* Keep overlay behind the image */
-    display: flex;
+    display: flex; /* Initially hidden */
     justify-content: center;
     align-items: center;
-    pointer-events: none;
+    pointer-events: none; /* Ensure it doesn't block interaction */
+    opacity: 0;
+    transition: opacity 0.3s ease;
 }
 
-@keyframes fadeEffect {
-    0% {
-        opacity: 0;
-    }
-    15% {
-        opacity: 1;
-    }
-    95% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
 /* GIF image size */
 .gif-img {
-    background-image: url('../halloween/bat_animation.gif');
-    margin-top:150px;
-    min-width: 110vw; /* Adjust the size as needed */
-    min-height: 110vh;
-    background-repeat: no-repeat; /* Ensure the gif doesn't repeat */
-    background-position: center; /* Center the gif */
-    background-size: contain; /
+    min-width: 120vw; /* Adjust the size as needed */
+    max-height: 70vh;
+    margin-right: 50px;
+    margin-bottom: 70px;
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3)); /* Add shadow */
-    animation: fadeEffect  5.17s infinite; /* Adjust 5s to match your GIF's duration */
+
 }
 
-/* Navbar Styles */
-.navbar {
-    background-color: #000;
-    opacity: 0.95;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    z-index: 1000;
+/* Show overlay when hovering over the .top-image */
+.top-image:hover + .gif-overlay {
+    opacity: 0.3; /* Adjust transparency */
 }
 
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+/* Ensure the top-image stays above the gif-overlay */
+.top-image {
+    position: relative; /* Set relative positioning for stacking context */
+    z-index: 1; /* Ensure image stays above the overlay */
 }
-
-.logo {
-    color: #fff;
-    font-size: 1.8rem;
-    font-weight: bold;
-    text-decoration: none;
-}
-
-.logo-green {
-    color: #1DB954;
-}
-
-.nav-menu {
-    position: relative;
-}
-
-.nav-button {
-    color: #fff;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 1rem;
-}
-
-.dropdown-menu {
-    position: absolute;
-    right: 0;
-    top: 100%;
-    background-color: #333;
-    border-radius: 8px;
-    padding: 10px 0;
-    display: none;
-}
-
-.dropdown-menu.show {
-    display: block;
-}
-
-.dropdown-item {
-    color: #fff;
-    padding: 10px 20px;
-    text-decoration: none;
-}
-
-.dropdown-item:hover {
-    background-color: #1DB954;
-}
-
 /* Main Content */
 .main-content {
     padding-top: 100px;
@@ -152,10 +128,11 @@ body {
 /* Typography */
 h1 {
     font-size: 2.5rem;
-    color: black;
+    color: white;
     margin-bottom: 20px;
     text-align: center; /* Center horizontally */
     padding: 20px;
+    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
 }
 
 /* Fade-in Animation for Pages */
@@ -180,11 +157,11 @@ ul {
 }
 
 ul li {
-    background-color: rgb(0,0,0,.6);
+    background-color: rgb(255, 255, 255,.6);
     padding: 15px;
     margin: 10px 0;
     border-radius: 8px;
-    color: #fff;
+    color: black;
     font-size: 1.1rem;
     transition: background-color 0.3s ease;
     animation: slideIn 0.4s ease forwards;
@@ -205,7 +182,18 @@ ul li2 {
     width: 80%;
     text-align: center;
 }
-
+ul li3 {
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 8px;
+    color: #fff;
+    font-size: 1.1rem;
+    transition: background-color 0.3s ease;
+    animation: slideIn 0.4s ease forwards;
+    opacity: 0;
+    width: 80%;
+    text-align: center;
+}
 @keyframes slideIn {
     from { transform: translateX(-20px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
@@ -219,14 +207,12 @@ ul li:nth-child(4) { animation-delay: 0.4s; }
 ul li:nth-child(5) { animation-delay: 0.5s; }
 
 ul li:hover {
-    background-color: rgb(0,0,0,.3);
+    background-color:  rgb(255, 255, 255,.3);
 }
 
 /* Button Styling */
 .btn-next,
-.btn-prev,
-.connect-button,
-.full-stats-button {
+.btn-prev {
     display: inline-block;
     padding: 10px 20px;
     background-color: #1DB954;
@@ -241,8 +227,6 @@ ul li:hover {
 }
 
 .btn-next:hover,
-.connect-button:hover,
-.full-stats-button:hover,
 .btn-prev:hover {
     background-color: #17a847;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -267,49 +251,13 @@ ul li:hover {
     bottom: 20px; /* Position 20px from the bottom edge */
 }
 
-/* Profile Styles */
-.profile-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    h1 { font-size: 2rem; }
+    ul li { font-size: 1rem; }
+    .btn-next { font-size: 1em; padding: 8px 16px; }
 }
 
-.profile-header {
-    background-color: #333;
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.profile-icon {
-    background-color: #1DB954;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    color: #000;
-    margin-right: 20px;
-}
-
-.connection-box {
-    background-color: #333;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.status-connected {
-    color: #1DB954;
-}
-
-.status-not-connected {
-    color: #FFA500;
-}
 
 /* Container for the left and right halves */
 .top-5 {
@@ -345,18 +293,18 @@ ul li:hover {
 }
 
 .right-half ul li {
-    background-color: rgb(0,0,0,.6);
+    background-color: rgb(255, 255, 255,.6);
     padding: 15px;
     margin: 10px 0;
     border-radius: 8px;
-    color: #fff;
+    color: black;
     font-size: 1.1rem;
     transition: background-color 0.3s ease;
     text-align: center;
 }
 
 .right-half ul li:hover {
-    background-color: rgb(0,0,0,.3);
+    background-color: rgb(255, 255, 255,.3);
 }
 
 /* Button Styling */
@@ -424,23 +372,36 @@ h2 {
 
 h3 {
     font-size: 1.5rem;
-    color: white;
+    color: black;
     text-align: center; /* Center horizontally */
     padding: 20px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.7);
 }
 
-@media (max-width: 400px) {
-    .gif-img {
-        background-image: url('.gif');
-        margin-top: 150px;
-        max-width: 200px; /* Set the width to match the viewport */
+.navbar {
+    background-color: rgb(222, 222, 222, .95);
+}
 
-        background-repeat: no-repeat; /* Ensure the gif doesn't repeat */
-        background-position: center; /* Center the gif */
-        background-size: cover; /* Cover the container, cropping excess */
-        overflow: hidden;
-        filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3)); /* Add shadow */
-        animation: fadeEffect 5.17s infinite; /* Adjust 5s to match your GIF's duration */
-    }
+.logo {
+    color: black;
+}
+
+.nav-button {
+    color: black;
+}
+
+.final-summary-container ul li {
+    background-color: rgb(255, 255, 255,.6);
+}
+
+
+.profile-container {
+    color: #black;
+}
+.profile-header {
+    background-color: rgba(255,255,255, 0.6);
+}
+/* Connection Box */
+.connection-box, .stats-container  {
+    background-color: rgba(255,255,255, 0.6);
 }

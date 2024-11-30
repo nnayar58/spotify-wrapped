@@ -1,0 +1,47 @@
+{% extends "spotify_app/base.html" %}
+{% load static %}
+{% block content %}
+<body class="my-wraps">
+<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/greenwave.mp4' %}">
+    <source src="{% static 'videos/greenwave.mp4' %}" type="video/mp4">
+</video>
+    <h1>My Saved Wraps</h1>
+    <ul id="image-gallery" style="margin-top: -20px;">
+        {% for screenshot in screenshots %}
+        <li style="max-width: 75vw; margin-top:10px; padding-top: 30px;">
+            <img src="{{ screenshot.file_path }}" alt="Saved Screenshot" style="max-width: 70vw; margin-bottom: 20px;">
+        </li>
+        {% empty %}
+        <p>You have not saved any screenshots yet.</p>
+        {% endfor %}
+    </ul>
+    <button class="btn-top-5" id="clear-all-btn">Clear All Wrapped</button>
+</body>
+<script>
+    // Handle the "Clear All Wrapped" button click
+    document.getElementById("clear-all-btn").addEventListener("click", function() {
+      if (confirm("Are you sure you want to clear all your wraps?")) {
+        fetch("{% url 'spotify_app:clear_all_wraps' %}", {
+          method: "POST",
+          headers: {
+            "X-CSRFToken": "{{ csrf_token }}",
+          },
+        })
+        .then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            alert("All wraps cleared.");
+            location.reload();  // Reload the page to reflect changes
+          } else {
+            alert("Failed to clear wraps.");
+          }
+        })
+        .catch(error => {
+          console.error("Error:", error);
+          alert("An error occurred while clearing wraps.");
+        });
+      }
+    });
+</script>
+{% endblock %}
+

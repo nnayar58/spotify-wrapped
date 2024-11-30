@@ -1,4 +1,6 @@
 # spotify_app/urls.py
+from django.conf import settings
+from django.conf.urls.static import static
 from django.urls import path
 from .views import (  # Explicitly import all views used in urlpatterns
     home,
@@ -26,6 +28,9 @@ from .views import (  # Explicitly import all views used in urlpatterns
     view_wrap,
     game_artist,
     game_track,
+    save_screenshot,
+    my_wraps_view,
+    clear_all_wraps,
 )
 
 app_name = 'spotify_app'  # Define the namespace
@@ -60,4 +65,10 @@ urlpatterns = [
     path('contact/', contact_developers, name='contact_developers'),
     path('view-feedback/', view_feedback, name='view_feedback'),
     path('feedback_success/', feedback_success, name='feedback_success'),
+    path("save-screenshot/", save_screenshot, name="save_screenshot"),
+    path('my_wraps/', my_wraps_view, name='my_wraps'),
+    path('clear_all_wraps/', clear_all_wraps, name='clear_all_wraps'),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -11,50 +11,12 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-/* Specific Background Colors for Flow Pages */
-body.top-tracks {
+body {
     background-image: url('../videos/bluewave.jpg');
     background-size: cover; /* Ensure the GIF covers the entire viewport */
     background-position: center; /* Center the GIF */
     background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
 }
-body.top-artists {
-    background-image: url('../videos/purplewave.jpg');
-    background-size: cover; /* Ensure the GIF covers the entire viewport */
-    background-position: center; /* Center the GIF */
-    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
-}
-body.top-genres {
-    background-image: url('../videos/pinkwave.jpg');
-    background-size: cover; /* Ensure the GIF covers the entire viewport */
-    background-position: center; /* Center the GIF */
-    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
-}
-body.game-artist {
-    background-image: url('../videos/purplewave.jpg');
-    background-size: cover; /* Ensure the GIF covers the entire viewport */
-    background-position: center; /* Center the GIF */
-    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
-}
-body.game-track {
-    background-image: url('../videos/bluewave.jpg');
-    background-size: cover; /* Ensure the GIF covers the entire viewport */
-    background-position: center; /* Center the GIF */
-    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
-}
-body.final-summary {
-    background-image: url('../videos/orangewave.jpg');
-    background-size: cover; /* Ensure the GIF covers the entire viewport */
-    background-position: center; /* Center the GIF */
-    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
-}
-body.listening-habits {
-    background-image: url('../videos/greenwave.jpg');
-    background-size: cover; /* Ensure the GIF covers the entire viewport */
-    background-position: center; /* Center the GIF */
-    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
-}
-
 .video-background {
     position: fixed;
     top: 0;
@@ -150,7 +112,7 @@ ul {
 }
 
 ul li {
-    background-color: rgb(255, 255, 255,.6);
+    background-color: rgb(232, 251, 255,.6);
     padding: 15px;
     margin: 10px 0;
     border-radius: 8px;
@@ -200,14 +162,12 @@ ul li:nth-child(4) { animation-delay: 0.4s; }
 ul li:nth-child(5) { animation-delay: 0.5s; }
 
 ul li:hover {
-    background-color:  rgb(255, 255, 255,.3);
+    background-color:  rgb(232, 251, 255,.3);
 }
 
 /* Button Styling */
 .btn-next,
-.btn-prev,
-.connect-button,
-.full-stats-button {
+.btn-prev{
     display: inline-block;
     padding: 10px 20px;
     background-color: #1DB954;
@@ -222,8 +182,6 @@ ul li:hover {
 }
 
 .btn-next:hover,
-.connect-button:hover,
-.full-stats-button:hover,
 .btn-prev:hover {
     background-color: #17a847;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -246,50 +204,6 @@ ul li:hover {
     position: fixed;
     right: 20px; /* Position 20px from the right edge */
     bottom: 20px; /* Position 20px from the bottom edge */
-}
-
-/* Profile Styles */
-.profile-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.profile-header {
-    background-color: #e0e0e0;
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.profile-icon {
-    background-color: #1DB954;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    color: #000;
-    margin-right: 20px;
-}
-
-.connection-box {
-    background-color: #e0e0e0;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.status-connected {
-    color: #1DB954;
-}
-
-.status-not-connected {
-    color: #FFA500;
 }
 
 /* Responsive Adjustments */
@@ -334,7 +248,7 @@ ul li:hover {
 }
 
 .right-half ul li {
-    background-color: rgb(255, 255, 255,.6);
+    background-color: rgb(232, 251, 255,.6);
     padding: 15px;
     margin: 10px 0;
     border-radius: 8px;
@@ -345,7 +259,7 @@ ul li:hover {
 }
 
 .right-half ul li:hover {
-    background-color: rgb(255, 255, 255,.3);
+    background-color: rgb(232, 251, 255,.3);
 }
 
 /* Button Styling */
@@ -416,11 +330,11 @@ h3 {
     color: black;
     text-align: center; /* Center horizontally */
     padding: 20px;
-    text-shadow: 0 2px 8px rgba(255, 255, 255, 0.7);
+    text-shadow: 0 2px 8px rgba(232, 251, 255, 0.7);
 }
 
 .navbar {
-    background-color: rgb(222, 222, 222, .95);
+    background-color: rgb(84, 126, 199, .95);
 }
 
 .logo {
@@ -432,6 +346,16 @@ h3 {
 }
 
 .final-summary-container ul li {
-    background-color: rgb(255, 255, 255,.6);
+    background-color: rgb(232, 251, 255,.6);
 }
 
+.profile-container {
+    color: #black;
+}
+.profile-header {
+    background-color: rgb(232, 251, 255,.6);
+}
+/* Connection Box */
+.connection-box, .stats-container  {
+    background-color: rgb(232, 251, 255,.6);
+}

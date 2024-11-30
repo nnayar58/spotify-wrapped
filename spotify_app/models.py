@@ -37,3 +37,11 @@ class SavedWrap(models.Model):
 
     def __str__(self):
         return f"{self.user.username}'s wrap saved on {self.created_at}"
+
+class Screenshot(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # Associate screenshot with a user
+    file_path = models.CharField(max_length=255)  # Path to the screenshot file
+    created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for the screenshot
+
+    def __str__(self):
+        return f"{self.user.username} - {self.file_path}"

@@ -717,7 +717,7 @@ def base_view(request):
     return render(request, 'base.html', {'theme': theme})
 
 from random import sample
-
+@login_required
 def game_artist(request):
     user_profile = UserProfile.objects.get(user=request.user)  # Get the user's profile
     top_artists = get_top_artists(user_profile)  # Fetch top artists
@@ -744,7 +744,7 @@ def game_artist(request):
     return render(request, 'spotify_app/game_artist.html', {'top_artists': top_artists, 'shuffled_artists': artists_to_show})
 
 import random
-
+@login_required
 def game_track(request):
     user_profile = UserProfile.objects.get(user=request.user)  # Get the user's profile
     
@@ -774,3 +774,61 @@ def game_track(request):
         'correct_track': correct_track
     })
 
+from django.shortcuts import render
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.conf import settings
+from .models import Screenshot
+import os
+from datetime import datetime
+from django.views.decorators.csrf import csrf_exempt
+
+@csrf_exempt
+@login_required
+def save_screenshot(request):
+    if request.method == "POST" and request.FILES.get("image"):
+        image = request.FILES["image"]
+
+        # Append the current date and username to the file name
+        current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        original_name, extension = os.path.splitext(image.name)
+        new_name = f"{request.user.username}_{original_name}_{current_date}{extension}"
+
+        # Save the file with the new name
+        file_path = os.path.join("media/screenshots", new_name)
+        os.makedirs(os.path.dirname(file_path), exist_ok=True)  # Ensure the directory exists
+
+        with open(file_path, "wb+") as destination:
+            for chunk in image.chunks():
+                destination.write(chunk)
+
+        # Save the screenshot in the database
+        relative_url = os.path.join(settings.MEDIA_URL, 'screenshots', new_name)
+        Screenshot.objects.create(user=request.user, file_path=relative_url)
+
+        return JsonResponse({"success": True, "file_path": relative_url})
+
+    return JsonResponse({"success": False, "error": "Invalid request."})
+
+
+
+@login_required
+def my_wraps_view(request):
+    # Fetch screenshots only for the logged-in user
+    screenshots = Screenshot.objects.filter(user=request.user).order_by('-created_at')
+
+    return render(request, 'spotify_app/my_wraps.html', {'screenshots': screenshots})
+
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Screenshot
+
+@login_required
+def clear_all_wraps(request):
+    if request.method == "POST":
+        # Delete all screenshots for the current user
+        Screenshot.objects.filter(user=request.user).delete()
+        return JsonResponse({"success": True})
+
+    return JsonResponse({"success": False, "error": "Invalid request."})

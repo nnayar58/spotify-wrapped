@@ -1,14 +1,26 @@
-body {
-    background-color: #fafafa;
-    color: #000000;
-}
-
 /* Reset and Base Styles */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: #000;
+    color: #fff;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.15); /* Adjust the opacity as needed */
+    z-index: -1; /* Ensure it stays behind your content but above the video */
+    pointer-events: none; /* Make sure it doesn't block interactions */
 }
 
 /* Specific Background Colors for Flow Pages */
@@ -36,6 +48,7 @@ body.game-artist {
     background-position: center; /* Center the GIF */
     background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
 }
+
 body.game-track {
     background-image: url('../videos/bluewave.jpg');
     background-size: cover; /* Ensure the GIF covers the entire viewport */
@@ -49,6 +62,13 @@ body.final-summary {
     background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
 }
 body.listening-habits {
+    background-image: url('../videos/greenwave.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
+
+body.profile {
     background-image: url('../videos/greenwave.jpg');
     background-size: cover; /* Ensure the GIF covers the entire viewport */
     background-position: center; /* Center the GIF */
@@ -99,6 +119,7 @@ body.listening-habits {
     position: relative; /* Set relative positioning for stacking context */
     z-index: 1; /* Ensure image stays above the overlay */
 }
+
 /* Main Content */
 .main-content {
     padding-top: 100px;
@@ -121,11 +142,10 @@ body.listening-habits {
 /* Typography */
 h1 {
     font-size: 2.5rem;
-    color: white;
+    color: black;
     margin-bottom: 20px;
     text-align: center; /* Center horizontally */
     padding: 20px;
-    text-shadow: 0 1px 8px rgba(0, 0, 0, 0.7);
 }
 
 /* Fade-in Animation for Pages */
@@ -150,11 +170,11 @@ ul {
 }
 
 ul li {
-    background-color: rgb(232, 251, 255,.6);
+    background-color: rgb(0,0,0,.6);
     padding: 15px;
     margin: 10px 0;
     border-radius: 8px;
-    color: black;
+    color: #fff;
     font-size: 1.1rem;
     transition: background-color 0.3s ease;
     animation: slideIn 0.4s ease forwards;
@@ -175,6 +195,7 @@ ul li2 {
     width: 80%;
     text-align: center;
 }
+
 ul li3 {
     padding: 20px;
     margin: 10px 0;
@@ -187,6 +208,7 @@ ul li3 {
     width: 80%;
     text-align: center;
 }
+
 @keyframes slideIn {
     from { transform: translateX(-20px); opacity: 0; }
     to { transform: translateX(0); opacity: 1; }
@@ -200,14 +222,12 @@ ul li:nth-child(4) { animation-delay: 0.4s; }
 ul li:nth-child(5) { animation-delay: 0.5s; }
 
 ul li:hover {
-    background-color:  rgb(232, 251, 255,.3);
+    background-color: rgb(0,0,0,.3);
 }
 
 /* Button Styling */
 .btn-next,
-.btn-prev,
-.connect-button,
-.full-stats-button {
+.btn-prev {
     display: inline-block;
     padding: 10px 20px;
     background-color: #1DB954;
@@ -222,8 +242,6 @@ ul li:hover {
 }
 
 .btn-next:hover,
-.connect-button:hover,
-.full-stats-button:hover,
 .btn-prev:hover {
     background-color: #17a847;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -247,58 +265,6 @@ ul li:hover {
     right: 20px; /* Position 20px from the right edge */
     bottom: 20px; /* Position 20px from the bottom edge */
 }
-
-/* Profile Styles */
-.profile-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.profile-header {
-    background-color: #e0e0e0;
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.profile-icon {
-    background-color: #1DB954;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    color: #000;
-    margin-right: 20px;
-}
-
-.connection-box {
-    background-color: #e0e0e0;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.status-connected {
-    color: #1DB954;
-}
-
-.status-not-connected {
-    color: #FFA500;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    h1 { font-size: 2rem; }
-    ul li { font-size: 1rem; }
-    .btn-next { font-size: 1em; padding: 8px 16px; }
-}
-
 
 /* Container for the left and right halves */
 .top-5 {
@@ -334,18 +300,18 @@ ul li:hover {
 }
 
 .right-half ul li {
-    background-color: rgb(232, 251, 255,.6);
+    background-color: rgb(0,0,0,.6);
     padding: 15px;
     margin: 10px 0;
     border-radius: 8px;
-    color: black;
+    color: #fff;
     font-size: 1.1rem;
     transition: background-color 0.3s ease;
     text-align: center;
 }
 
 .right-half ul li:hover {
-    background-color: rgb(232, 251, 255,.3);
+    background-color: rgb(0,0,0,.3);
 }
 
 /* Button Styling */
@@ -362,7 +328,6 @@ ul li:hover {
     display: block; /* Makes the button a block-level element */
     margin: 20px auto; /* Centers the button horizontally */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-
 }
 
 .btn-top-5:hover {
@@ -394,7 +359,7 @@ ul li:hover {
     text-align: center;
     font-size: 1.2em; /* Adjust font size if necessary */
     margin-left: 50px;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 h2 {
@@ -411,27 +376,110 @@ h2 {
     z-index: 1;
 }
 
+.previous-wraps-container {
+    margin-top: 20px;
+    background-color: #333;
+    border-radius: 8px;
+    padding: 20px;
+    color: #fff;
+}
+
+.previous-wraps-container h2 {
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.wrap-list {
+    list-style: none;
+    padding: 0;
+}
+
+.wrap-item {
+    background-color: #444;
+    border-radius: 6px;
+    padding: 15px;
+    margin-bottom: 10px;
+}
+
+.wrap-item p {
+    margin: 5px 0;
+}
+
+.delete-wrap-button {
+    display: inline-block;
+    margin-top: 10px;
+    background-color: #e74c3c;
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.delete-wrap-button:hover {
+    background-color: #c0392b;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: flex-end; /* Align to the right */
+    align-items: center;
+    gap: 15px; /* Space between buttons */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.inline-form {
+    display: inline; /* Keep the form inline with the buttons */
+}
+
+.btn-next.disabled {
+    background-color: #888; /* Grey color for disabled state */
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 h3 {
     font-size: 1.5rem;
-    color: black;
+    color: white;
     text-align: center; /* Center horizontally */
     padding: 20px;
-    text-shadow: 0 2px 8px rgba(232, 251, 255, 0.7);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .navbar {
-    background-color: rgb(84, 126, 199, .95);
+    background-color: rgba(0, 0, 0, 0.9);
 }
 
+
 .logo {
-    color: black;
+    color: white;
 }
 
 .nav-button {
-    color: black;
+    color: white;
+}
+
+h4 {
+    font-size: 1.5rem;
+    color: white;
+    text-align: center; /* Center horizontally */
+    padding: 20px;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
 .final-summary-container ul li {
-    background-color: rgb(232, 251, 255,.6);
+    background-color: rgb(0, 0, 0,.6);
 }
 
+/* Profile Header */
+    .profile-container {
+        color: #fff;
+    }
+    .profile-header {
+        background-color: rgba(0, 0, 0, 0.6);
+    }
+    /* Connection Box */
+    .connection-box, .stats-container  {
+        background-color: rgba(0, 0, 0, 0.6);
+    }

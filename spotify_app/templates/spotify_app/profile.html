@@ -1,8 +1,8 @@
 {% extends "spotify_app/base.html" %}
 {% load static %}
 {% block content %}
-<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/.mp4' %}">
-    <source src="{% static 'videos/.mp4' %}" type="video/mp4">
+<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/greenwave.mp4' %}">
+    <source src="{% static 'videos/greenwave.mp4' %}" type="video/mp4">
 </video>
 
 <div class="profile-container">
@@ -12,17 +12,17 @@
             <span>{{ user.username|make_list|first|upper }}</span>
         </div>
         <div class="profile-info">
-            <h1>{{ user.username }}</h1>
+            <h2 style="font-size: 50px;">{{ user.username }}</h2>
             <p>Member since {{ user.date_joined|date:"F Y" }}</p>
         </div>
     </div>
 
     <!-- Spotify Connection Status -->
     <div class="connection-box">
-        <h2>Spotify Connection</h2>
+        <h2 style="margin: 15px;">Spotify Connection:</h2>
         {% if spotify_connected %}
             <div class="status-connected">
-                Connected to Spotify
+                You Are Connected to Spotify
             </div>
         {% else %}
             <div class="status-not-connected">
@@ -34,21 +34,24 @@
         {% endif %}
     </div>
 
-    <!-- Get Full Stats Button -->
-    {% if spotify_connected %}
-    <div class="stats-button-container">
-        <a href="{% url 'spotify_app:game_artist' %}" class="full-stats-button">
-            View Your Wrapped Now!
-        </a>
-    </div>
-    {% endif %}
+    <div class="stats-container">
+        <!-- Get Full Stats Button -->
+        {% if spotify_connected %}
+        <div class="stats-button-container">
+            <a href="{% url 'spotify_app:game_artist' %}" class="full-stats-button">
+                View Your Wrapped Now!
+            </a>
+        </div>
+        {% endif %}
 
-    <!-- Saved Wraps Button -->
-    <div class="saved-wraps-button-container">
-        <a href="{% url 'spotify_app:view_saved_wraps' %}" class="saved-wraps-button">View Saved Wraps</a>
+        <!-- Saved Wraps Button -->
+        <div class="saved-wraps-button-container">
+            <a href="{% url 'spotify_app:my_wraps' %}" class="saved-wraps-button">My Saved Wraps</a>
+        </div>
+
+        <!-- Delete Account -->
+        <a href="{% url 'spotify_app:delete_account' %}" class="delete-account-link">Delete Account</a>
     </div>
 
-    <!-- Delete Account -->
-    <a href="{% url 'spotify_app:delete_account' %}" class="delete-account-link">Delete Account</a>
 </div>
 {% endblock %}

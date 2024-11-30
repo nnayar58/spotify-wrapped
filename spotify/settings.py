@@ -46,6 +46,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+LOGIN_URL = '/accounts/login/'  # Redirect to login page if not authenticated
 
 
 # Application definition

@@ -7,7 +7,7 @@
 }
 
 body {
-    background-image: url('../videos/halloween.jpg');
+    background-image: url('../videos/christmas.jpg');
     background-size: cover; /* Ensure the GIF covers the entire viewport */
     background-position: center; /* Center the GIF */
     background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
@@ -22,6 +22,7 @@ body {
     object-fit: cover;
     z-index: -1;
 }
+
 .gif-overlay {
     position: absolute;
     top: 0;
@@ -35,33 +36,16 @@ body {
     pointer-events: none;
 }
 
-@keyframes fadeEffect {
-    0% {
-        opacity: 0;
-    }
-    15% {
-        opacity: 1;
-    }
-    95% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
-/* GIF image size */
 .gif-img {
-    background-image: url('../halloween/bat_animation.gif');
-    margin-top:150px;
-    min-width: 110vw; /* Adjust the size as needed */
-    min-height: 110vh;
+    background-image: url('../christmas/snow.gif');
+    margin-top:-110px;
+    min-width: 100vw; /* Adjust the size as needed */
+    min-height: 100vh;
     background-repeat: no-repeat; /* Ensure the gif doesn't repeat */
     background-position: center; /* Center the gif */
     background-size: contain; /
     filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.3)); /* Add shadow */
-    animation: fadeEffect  5.17s infinite; /* Adjust 5s to match your GIF's duration */
 }
-
 /* Main Content */
 .main-content {
     padding-top: 100px;
@@ -156,9 +140,7 @@ ul li:hover {
 
 /* Button Styling */
 .btn-next,
-.btn-prev,
-.connect-button,
-.full-stats-button {
+.btn-prev {
     display: inline-block;
     padding: 10px 20px;
     background-color: #1DB954;
@@ -173,8 +155,6 @@ ul li:hover {
 }
 
 .btn-next:hover,
-.connect-button:hover,
-.full-stats-button:hover,
 .btn-prev:hover {
     background-color: #17a847;
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
@@ -197,50 +177,6 @@ ul li:hover {
     position: fixed;
     right: 20px; /* Position 20px from the right edge */
     bottom: 20px; /* Position 20px from the bottom edge */
-}
-
-/* Profile Styles */
-.profile-container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.profile-header {
-    background-color: #333;
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.profile-icon {
-    background-color: #1DB954;
-    border-radius: 50%;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    color: #000;
-    margin-right: 20px;
-}
-
-.connection-box {
-    background-color: #333;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.status-connected {
-    color: #1DB954;
-}
-
-.status-not-connected {
-    color: #FFA500;
 }
 
 /* Responsive Adjustments */
@@ -313,11 +249,13 @@ ul li:hover {
     display: block; /* Makes the button a block-level element */
     margin: 20px auto; /* Centers the button horizontally */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    z-index: 2; /* Keep overlay behind the image */
 
 }
 
 .btn-top-5:hover {
     background-color: #1ed760; /* Lighter green for hover effect */
+    z-index: 2; /* Keep overlay behind the image */
 }
 
 .btn-top-5:focus {
@@ -389,3 +327,13 @@ h3 {
 }
 
 
+.profile-container {
+    color: #fff;
+}
+.profile-header {
+    background-color: rgba(0, 0, 0, 0.6);
+}
+/* Connection Box */
+.connection-box, .stats-container  {
+    background-color: rgba(0, 0, 0, 0.6);
+}

@@ -175,7 +175,7 @@
     }
 </style>
 <body class="final-summary">
-<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/orangewave.mp4' %}">
+<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos\orangewave.mp4' %}">
     <source src="{% static 'videos\orangewave.mp4' %}" type="video/mp4">
 </video>
 <h1>Your Spotify Year in Review</h1>
@@ -234,31 +234,6 @@
                 <div class="save-btn">
                     <a id="save-wrapped-btn">Save Your Wrapped!</a>
                 </div>
-
-                <script>
-                    document.getElementById("save-wrapped-btn").addEventListener("click", function (event) {
-                        event.preventDefault(); // Prevent default behavior of the link
-
-                        fetch("{% url 'spotify_app:save_wrapped' %}", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                                "X-CSRFToken": "{{ csrf_token }}" // Ensure the CSRF token is included
-                            },
-                            body: JSON.stringify({}) // Add any additional data if necessary
-                        })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.error) {
-                                    alert("Error: " + data.error);
-                                } else {
-                                    alert("Wrap saved successfully!");
-                                    window.location.href = "{% url 'spotify_app:view_saved_wraps' %}";
-                                }
-                            })
-                            .catch(error => console.error("Error:", error));
-                    });
-                </script>
                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
             </li>
             <li>
@@ -280,8 +255,45 @@
 </div>
 </body>
 <a href="{% url 'spotify_app:listening_habits' %}" class="btn-prev">Previous</a>
-
 <!-- Next Button -->
-<a href="{% url 'spotify_app:home' %}" class="btn-next">Home</a>
+<a href="{% url 'spotify_app:my_wraps' %}" class="btn-next">My Wraps</a>
+
+<script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
+<script>
+    document.getElementById("save-wrapped-btn").addEventListener("click", function (event) {
+        event.preventDefault();
+        const node = document.querySelector(".final-summary");
+
+        domtoimage.toBlob(node)
+            .then(function (blob) {
+                const formData = new FormData();
+                formData.append("image", blob, "wrapped_summary.png");
+
+                fetch("{% url 'spotify_app:save_screenshot' %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Your Wrapped is Saved! View it in your Profile Page!");
+
+                            // Optionally, you could store the image URL in the local storage or a session
+                            // For now, we'll redirect to the my_wraps.html page with the new image URL
+                            window.location.href = "{% url 'spotify_app:my_wraps' %}";
+                        } else {
+                            alert("Error saving screenshot.");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            })
+            .catch(error => console.error("Screenshot error:", error));
+    });
+
+
+</script>
 
 {% endblock %}
