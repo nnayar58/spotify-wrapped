@@ -232,8 +232,34 @@
             </li>
             <li>
                 <div class="save-btn">
-                    <a>Save Your Wrapped!</a>
+                    <a id="save-wrapped-btn">Save Your Wrapped!</a>
                 </div>
+
+                <script>
+                    document.getElementById("save-wrapped-btn").addEventListener("click", function (event) {
+                        event.preventDefault(); // Prevent default behavior of the link
+
+                        fetch("{% url 'spotify_app:save_wrapped' %}", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": "{{ csrf_token }}" // Ensure the CSRF token is included
+                            },
+                            body: JSON.stringify({}) // Add any additional data if necessary
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.error) {
+                                    alert("Error: " + data.error);
+                                } else {
+                                    alert("Wrap saved successfully!");
+                                    window.location.href = "{% url 'spotify_app:view_saved_wraps' %}";
+                                }
+                            })
+                            .catch(error => console.error("Error:", error));
+                    });
+                </script>
+                <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
             </li>
             <li>
                 <div class="social-share-buttons">
