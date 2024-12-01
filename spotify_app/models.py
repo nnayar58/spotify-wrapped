@@ -42,6 +42,8 @@ class Screenshot(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Associate screenshot with a user
     file_path = models.CharField(max_length=255)  # Path to the screenshot file relative to MEDIA_ROOT
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for the screenshot
+    theme = models.CharField(max_length=50, default="Default")  # Theme when the screenshot was saved
 
     def __str__(self):
-        return f"{self.user.username} - {self.file_path}"
+        return f"{self.user.username} - {self.file_path} ({self.theme})"
+

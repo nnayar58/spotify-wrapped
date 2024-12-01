@@ -30,8 +30,15 @@
         <img src="{{ screenshot.file_path }}" alt="Saved Screenshot" style="max-width: 70vw; margin-bottom: 20px; border-radius:15px;" loading="eager">
         <br>
         <span style="display: block; text-align: center; font-size: 25px; color: white; font-weight: 600; text-shadow: 0 1px 10px rgba(0, 0, 0, 1);">
-                Saved on {{ screenshot.created_at|date:"m/d/Y" }}
-            </span>
+            Saved on {{ screenshot.created_at|date:"m/d/Y" }}
+            {% if screenshot.theme == '/static/style/christmas3.css' %}
+              <p>(Christmas Edition)</p>
+            {% elif screenshot.theme == '/static/style/halloween3.css' %}
+              <p>(Halloween Edition)</p>
+            {% else %}
+            {% endif %}
+        </span>
+
         <br>
         <!-- Delete Button -->
         <button class="btn-delete" onclick="deleteWrap({{ screenshot.id }})">Delete Wrap</button>
@@ -42,7 +49,7 @@
 </ul>
 <button class="btn-top-6" id="clear-all-btn" style="margin-top:5vh; background-color: #e04141;">Clear All Wrapped</button>
 
-<a href="{% url 'spotify_app:final_summary' %}" class="btn-prev">Previous</a>
+<a href="{% url 'spotify_app:final_summary' %}" class="btn-prev">Summary</a>
 <a href="{% url 'spotify_app:profile' %}" class="btn-next">Profile</a>
 </body>
 <script>

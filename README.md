@@ -69,8 +69,12 @@ ALTER ROLE rohitgogi SET default_transaction_isolation TO 'read committed';
 ALTER ROLE rohitgogi SET timezone TO 'UTC';
 GRANT ALL PRIVILEGES ON DATABASE rohitgogi TO rohitgogi;
 ```
-
-### 6. **Apply Migrations**
+### 6. **Install Psycopg2
+Install Psycopg2
+```bash
+pip install psycopg2
+```
+### 7. **Apply Migrations**
 
 Run the following commands to set up the database:
 
@@ -79,7 +83,7 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 7. **Create a Superuser**
+### 8. **Create a Superuser**
 
 To access the Django admin panel, create a superuser:
 
@@ -89,7 +93,7 @@ python manage.py createsuperuser
 
 Follow the prompts to set up your admin credentials.
 
-### 8. **Collect Static Files**
+### 9. **Collect Static Files**
 
 Before running the server, collect the static files:
 
@@ -97,7 +101,7 @@ Before running the server, collect the static files:
 python manage.py collectstatic
 ```
 
-### 9. **Run the Development Server**
+### 10. **Run the Development Server**
 
 Start the server with:
 
@@ -111,7 +115,7 @@ Open your web browser and go to:
 http://127.0.0.1:8000/
 ```
 
-### 10. **Spotify Integration**
+### 11. **Spotify Integration**
 
 Click "Connect to Spotify" on the home page to authenticate your Spotify account and view your listening statistics.
 

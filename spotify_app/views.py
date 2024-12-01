@@ -784,29 +784,42 @@ import os
 from datetime import datetime
 from django.views.decorators.csrf import csrf_exempt
 
+THEME_MAP = {
+    "halloween3.css": "Halloween",
+    "christmas3.css": "Christmas",
+    "light2.css": "Light",
+    "blue3.css": "Blue",
+    "base14.css": "Dark",
+}
+
 @csrf_exempt
 @login_required
 def save_screenshot(request):
     if request.method == "POST" and request.FILES.get("image"):
         image = request.FILES["image"]
 
-        # Append the current date and username to the file name
+        # Retrieve the theme from the frontend (default to "Default" if not provided)
+        theme = request.POST.get("theme", "Default")
+
+        # Append the current date, username, and theme to the file name
         current_date = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
         original_name, extension = os.path.splitext(image.name)
-        new_name = f"{request.user.username}_{original_name}_{current_date}{extension}"
+        new_name = f"{request.user.username}_{original_name}_{current_date}_{theme.replace(' ', '_')}{extension}"
 
-        # Save the file with the new name
-        file_path = os.path.join("media/screenshots", new_name)
+        # Save the file to the media/screenshots directory
+        file_path = os.path.join(settings.MEDIA_ROOT, "screenshots", new_name)
         os.makedirs(os.path.dirname(file_path), exist_ok=True)  # Ensure the directory exists
 
+        # Save the file locally
         with open(file_path, "wb+") as destination:
             for chunk in image.chunks():
                 destination.write(chunk)
 
-        # Save the screenshot in the database
-        relative_url = os.path.join(settings.MEDIA_URL, 'screenshots', new_name)
-        Screenshot.objects.create(user=request.user, file_path=relative_url)
+        # Save the screenshot entry in the database
+        relative_url = os.path.join(settings.MEDIA_URL, "screenshots", new_name)
+        Screenshot.objects.create(user=request.user, file_path=relative_url, theme=theme)
 
+        # Return success response
         return JsonResponse({"success": True, "file_path": relative_url})
 
     return JsonResponse({"success": False, "error": "Invalid request."})
@@ -815,27 +828,13 @@ def save_screenshot(request):
 
 @login_required
 def my_wraps_view(request):
-    # Fetch user profile data
-    user_profile = UserProfile.objects.get(user=request.user)
-
-    # Assuming `get_top_artists` is a function that returns the top 5 artists for the user
-    top_artists = get_top_artists(user_profile)[:5]  # Limit to top 5 artists
-    top_tracks = get_top_tracks(user_profile)[:5]  # Limit to top 5 artists
-    top_genres = get_top_genres(user_profile)[:5]  # Limit to top 5 artists
-
-
-
-# Fetch other data as needed (like screenshots)
     screenshots = Screenshot.objects.filter(user=request.user).order_by('-created_at')
+    for screenshot in screenshots:
+        saved_theme = screenshot.theme  # This is the saved theme in the model
+        screenshot.theme_display = THEME_MAP.get(saved_theme, "Default")
 
-    context = {
-        'screenshots': screenshots,
-        'top_artists': top_artists,  # Add top artists to the context
-        'top_tracks': top_tracks,  # Add top artists to the context
-        'top_genres': top_genres,
-    }
+    return render(request, 'spotify_app/my_wraps.html', {'screenshots': screenshots})
 
-    return render(request, 'spotify_app/my_wraps.html', context)
 
 
 from django.http import JsonResponse

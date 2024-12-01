@@ -335,41 +335,39 @@
 <script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
 <script>
     document.getElementById("save-wrapped-btn").addEventListener("click", function (event) {
-    event.preventDefault();
+        event.preventDefault();
 
-    // Temporarily adjust the page to ensure all content is visible
-    document.body.style.overflow = 'visible';
+        const currentTheme = localStorage.getItem('theme') || "Default";
 
-    const node = document.querySelector(".final-summary");
+        const node = document.querySelector(".final-summary");
 
-    domtoimage.toBlob(node)
-        .then(function (blob) {
-            // Reset page overflow
-            document.body.style.overflow = '';
+        domtoimage.toBlob(node)
+            .then(function (blob) {
+                const formData = new FormData();
+                formData.append("image", blob, "wrapped_summary.png");
+                formData.append("theme", currentTheme); // Pass the current theme
 
-            const formData = new FormData();
-            formData.append("image", blob, "wrapped_summary.png");
-
-            fetch("{% url 'spotify_app:save_screenshot' %}", {
-                method: "POST",
-                headers: {
-                    "X-CSRFToken": "{{ csrf_token }}"
-                },
-                body: formData
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert("Your Wrapped is Saved!");
-                        window.location.href = "{% url 'spotify_app:my_wraps' %}";
-                    } else {
-                        alert("Error saving screenshot.");
-                    }
+                fetch("{% url 'spotify_app:save_screenshot' %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    },
+                    body: formData
                 })
-                .catch(error => console.error("Error:", error));
-        })
-        .catch(error => console.error("Screenshot error:", error));
-});
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Your Wrapped is Saved!");
+                            window.location.href = "{% url 'spotify_app:my_wraps' %}";
+                        } else {
+                            alert("Error saving screenshot.");
+                        }
+                    })
+                    .catch(error => console.error("Error:", error));
+            })
+            .catch(error => console.error("Screenshot error:", error));
+    });
+
 
 function shareOnPinterest(imageUrl) {
         // Collect the top artists names and apply the escapejs filter to prevent HTML encoding
