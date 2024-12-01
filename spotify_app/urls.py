@@ -19,7 +19,6 @@ from .views import (  # Explicitly import all views used in urlpatterns
     final_summary,
     contact_developers,
     view_feedback,
-    feedback_success,
     delete_account,
     view_saved_wraps,
     delete_wrap,
@@ -31,6 +30,7 @@ from .views import (  # Explicitly import all views used in urlpatterns
     save_screenshot,
     my_wraps_view,
     clear_all_wraps,
+    delete_wrap
 )
 
 app_name = 'spotify_app'  # Define the namespace
@@ -64,10 +64,10 @@ urlpatterns = [
     path("replay-wrap/<int:wrap_id>/", replay_wrap, name="replay_wrap"),
     path('contact/', contact_developers, name='contact_developers'),
     path('view-feedback/', view_feedback, name='view_feedback'),
-    path('feedback_success/', feedback_success, name='feedback_success'),
     path("save-screenshot/", save_screenshot, name="save_screenshot"),
     path('my_wraps/', my_wraps_view, name='my_wraps'),
     path('clear_all_wraps/', clear_all_wraps, name='clear_all_wraps'),
+    path('delete_wrap/<int:screenshot_id>/', delete_wrap, name='delete_wrap'),
 ]
 
 if settings.DEBUG:

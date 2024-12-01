@@ -40,7 +40,7 @@ class SavedWrap(models.Model):
 
 class Screenshot(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)  # Associate screenshot with a user
-    file_path = models.CharField(max_length=255)  # Path to the screenshot file
+    file_path = models.CharField(max_length=255)  # Path to the screenshot file relative to MEDIA_ROOT
     created_at = models.DateTimeField(auto_now_add=True)  # Timestamp for the screenshot
 
     def __str__(self):

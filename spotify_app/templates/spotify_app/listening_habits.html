@@ -1,6 +1,15 @@
 {% extends "spotify_app/base.html" %}
 {% load static %}
 {% block content %}
+<style>
+    @media screen and (max-width: 400px) {
+        h3 {
+            font-size:1.2rem;
+            margin:0px;
+            padding:0px;
+        }
+    }
+</style>
 <body class="listening-habits">
 <video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/greenwave.mp4' %}">
     <source src="{% static 'videos\greenwave.mp4' %}" type="video/mp4">

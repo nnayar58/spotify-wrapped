@@ -1,3 +1,9 @@
+body.my-wraps {
+    background-image: url('../videos/greenwave.jpg');
+    background-size: cover; /* Ensure the GIF covers the entire viewport */
+    background-position: center; /* Center the GIF */
+    background-attachment: fixed; /* Ensure the GIF stays fixed when scrolling */
+}
 .btn-top-6 {
     background-color: #1db954; /* Spotify green */
     color: white;
@@ -367,6 +373,47 @@
         text-decoration: underline;
     }
 
+.btn-next1,
+.btn-prev1 {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #1DB954;
+    color: #fff;
+    border-radius: 30px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.btn-next1:hover,
+.btn-prev1:hover {
+    background-color: #17a847;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.btn-next1:active,
+ .btn-prev1:active {
+    transform: scale(0.95);
+    transition: transform 0.1s ease;
+}
+
+/* Positioning for prev and next buttons */
+.btn-prev1 {
+    position: fixed;
+    left: 20px; /* Position 20px from the left edge */
+    bottom: 20px; /* Position 20px from the bottom edge */
+}
+
+.btn-next1 {
+    position: fixed;
+    right: 20px; /* Position 20px from the right edge */
+    bottom: 20px; /* Position 20px from the bottom edge */
+}
+
 @media (max-width: 400px) {
     .video-background {
         width: 100%;
@@ -460,7 +507,9 @@
 
     /* Navigation Button Positioning */
     .btn-prev,
-    .btn-next {
+    .btn-next,
+    .btn-prev1,
+    .btn-next1 {
         display: inline-block;
         padding: 8px 16px;
         background-color: #1DB954;
@@ -684,5 +733,31 @@
     }
     .selected-option {
         width: 140px;
+    }
+
+    /* Positioning for prev and next buttons */
+    /* Button Container */
+    .button-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    /* Previous Button */
+    .btn-prev1, .btn-next1 {
+        position: relative;
+    }
+    .full-stats-button{
+        padding: 10px 10px;
+        font-size: 1.5em;
+    }
+    .status-connected, .status-not-connected{
+        padding: 10px 10px;
+        font-size: 1em;
+
+    }
+    .profile-header {
+        margin-top: -15px;
     }
 }

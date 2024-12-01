@@ -540,9 +540,9 @@ def final_summary(request):
         # Existing code for fetching new data
         user_profile = UserProfile.objects.get(user=request.user)
         context = {
-            'top_genres': get_top_genres(user_profile),
-            'top_artists': get_top_artists(user_profile),
-            'top_tracks': get_top_tracks(user_profile),
+            'top_genres': get_top_genres(user_profile)[:5],
+            'top_artists': get_top_artists(user_profile)[:5],
+            'top_tracks': get_top_tracks(user_profile)[:5],
             'total_listening_time': get_total_listening_time(user_profile),
             'peak_listening_day': get_peak_listening_day(user_profile),
             'peak_listening_time_of_day': get_peak_listening_time_of_day(user_profile),
@@ -559,14 +559,19 @@ def is_spotify_connected(user):
     except UserProfile.DoesNotExist:
         return False
 
+from django.contrib import messages
 def contact_developers(request):
     if request.method == 'POST':
         form = FeedbackForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('spotify_app:feedback_success')  # Create a success page or message
+            # Add a success message
+            messages.success(request, 'Thank you for your feedback! Your feedback has been successfully submitted. We appreciate your input.')
+            # Don't redirect, just render the same page with the success message
+            return render(request, 'spotify_app/contact_developers.html', {'form': form})
     else:
         form = FeedbackForm()
+
     team_info = [
         {"name": "Rohit Gogi", "role": "Scrum Master", "image": "rohit.png"},
         {"name": "Kelly Zhou", "role": "Product Owner", "image": "kelly.png"},
@@ -576,7 +581,6 @@ def contact_developers(request):
     ]
     return render(request, 'spotify_app/contact_developers.html', {'form': form, 'team_info': team_info})
 
-
 def view_feedback(request):
     feedback_list = Feedback.objects.all()
     if request.method == 'POST' and 'clear_all' in request.POST:
@@ -584,9 +588,6 @@ def view_feedback(request):
         return redirect('spotify_app:view_feedback')  # Redirect to the same page to refresh the list
     return render(request, 'spotify_app/view_feedback.html', {'feedback_list': feedback_list})
 
-
-def feedback_success(request):
-    return render(request, 'spotify_app/feedback_success.html')
 
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import SavedWrap
@@ -814,10 +815,27 @@ def save_screenshot(request):
 
 @login_required
 def my_wraps_view(request):
-    # Fetch screenshots only for the logged-in user
+    # Fetch user profile data
+    user_profile = UserProfile.objects.get(user=request.user)
+
+    # Assuming `get_top_artists` is a function that returns the top 5 artists for the user
+    top_artists = get_top_artists(user_profile)[:5]  # Limit to top 5 artists
+    top_tracks = get_top_tracks(user_profile)[:5]  # Limit to top 5 artists
+    top_genres = get_top_genres(user_profile)[:5]  # Limit to top 5 artists
+
+
+
+# Fetch other data as needed (like screenshots)
     screenshots = Screenshot.objects.filter(user=request.user).order_by('-created_at')
 
-    return render(request, 'spotify_app/my_wraps.html', {'screenshots': screenshots})
+    context = {
+        'screenshots': screenshots,
+        'top_artists': top_artists,  # Add top artists to the context
+        'top_tracks': top_tracks,  # Add top artists to the context
+        'top_genres': top_genres,
+    }
+
+    return render(request, 'spotify_app/my_wraps.html', context)
 
 
 from django.http import JsonResponse
@@ -832,3 +850,19 @@ def clear_all_wraps(request):
         return JsonResponse({"success": True})
 
     return JsonResponse({"success": False, "error": "Invalid request."})
+
+from django.http import JsonResponse, Http404
+from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
+from .models import Screenshot
+
+@login_required
+@csrf_exempt
+def delete_wrap(request, screenshot_id):
+    if request.method == "POST":
+        screenshot = get_object_or_404(Screenshot, id=screenshot_id, user=request.user)
+        screenshot.delete()
+        return JsonResponse({"success": True})
+    else:
+        return JsonResponse({"success": False, "error": "Invalid request method."}, status=400)
+

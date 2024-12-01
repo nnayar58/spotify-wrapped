@@ -1,96 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact the Developers</title>
-    {% load static %}
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background-color: #f4f4f4;
-        }
-        h2 {
-            font-size: 30px;
-            color: #333;
-            margin-bottom: 0px;
-        }
-        h3 {
-            margin-top: 0px;
-            margin-bottom: 0px;
-            font-size: 22px;
-        }
-        ul {
-            list-style: none;
-            padding: 0;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-        li {
-            padding: 0px 15px;
-            text-align: center;
-            width: 200px; /* Adjust width as needed */
-            margin: 10px; /* Add space between items */
-            margin-top: 0px;
-        }
-        li img {
-            width: 100%;
-            height: auto;
-            border-radius: 10%;
-            margin-bottom: 10px;
-        }
-        form {
-            max-width: 400px;
-            width: 100%;
-            padding: 20px;
-            padding-top: 5px;
-            background-color: #fff;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            margin-top: 15px;
-        }
-        input[type="text"], input[type="email"], textarea {
-            width: 95%;
-            max-width: 95%;
-            min-width: 95%;
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #28a745;
-            color: white;
-            padding: 10px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-    </style>
-</head>
-<body>
+{% extends "spotify_app/base.html" %}
+{% load static %}
+{% block content %}
+<style>
+    .contact-developers {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        ali5gn-items: center;
+        background-color: #f4f4f4;
+    }
+    h2 {
+        font-size: 30px;
+        color: #333;
+        margin-bottom: 0px;
+    }
+    h3 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+        font-size: 22px;
+    }
+    ul5 {
+        li5st-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    li5 {
+        padding: 0px 15px;
+        text-ali5gn: center;
+        width: 200px; /* Adjust width as needed */
+        margin: 10px; /* Add space between items */
+        margin-top: 0px;
+    }
+    li5 img {
+        width: 100%;
+        height: auto;
+        border-radius: 10%;
+        margin-bottom: 10px;
+    }
+    li5 div {
+        color:black;
+    }
+    form {
+        max-width: 400px;
+        width: 100%;
+        padding: 20px;
+        padding-top: 5px;
+        background-color: #fff;
+        border: 1px solid #ccc;  /* Fixed typo here ('soli5d' to 'solid') */
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin-top: 15px;
 
-<h2>About the Development Team</h2>
-<ul>
+        /* Centering the form horizontally */
+        margin-left: auto;
+        margin-right: auto;
+    }
+    form label {
+        color: black;
+    }
+    input[type="text"], input[type="email"], textarea {
+        width: 95%;
+        max-width: 95%;
+        min-width: 95%;
+        padding: 10px;
+        margin: 5px 0;
+        border: 1px soli5d #ddd;
+        border-radius: 4px;
+    }
+    button {
+        background-color: #28a745;
+        color: white;
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    @media screen and (max-width: 400px) {
+        form {
+            max-width: 80vw;
+        }
+
+    }
+</style>
+</head>
+<body class="contact-developers">
+<video class="video-background" autoplay loop muted playsinline id="background-video" data-default-video="{% static 'videos/greenwave.mp4' %}">
+    <source src="{% static 'videos/greenwave.mp4' %}" type="video/mp4">
+</video>
+<h1>About the Development Team</h1>
+<ul5>
     {% for member in team_info %}
-    <li>
+    <li5>
         <img src="{% static 'images/'|add:member.image %}" alt="{{ member.name }}">
         <div><strong>{{ member.name }}</strong><br>{{ member.role }}</div>
-    </li>
+    </li5>
     {% endfor %}
-</ul>
+</ul5>
 
 <h3>Send Us Your Feedback</h3>
+
+{% if messages %}
+<div class="alert alert-success">
+    {% for message in messages %}
+    <h3>{{ message }}</h3>
+    {% endfor %}
+</div>
+{% endif %}
 <form method="post">
     {% csrf_token %}
     {{ form.as_p }}
@@ -98,4 +117,4 @@
 </form>
 
 </body>
-</html>
+{% endblock %}

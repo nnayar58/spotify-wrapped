@@ -22,6 +22,14 @@
         margin-bottom: -20px;
         text-shadow: 0 1px 8x rgba(0, 0, 0, 0.9);
     }
+    h5 {
+        color: #189946;
+        text-align: center;
+        font-size: 1.5em;
+        margin-top: 20px;
+        margin-bottom: -20px;
+        text-shadow: 0 1px 8x rgba(0, 0, 0, 0.9);
+    }
 
     h1 {
         margin-bottom: -15px;
@@ -57,23 +65,8 @@
         text-align: center; /* Center the text horizontally */
     }
 
-    social-share-buttons, .save-btn{
-        display: flex;
-        justify-content: space-around;
-    }
-    .social-share-buttons a {
-        padding: 10px 0px;
-        background-color: #0077b5; /* LinkedIn color */
-        border-radius: 5px;
-        color: white;
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 16px;
-        margin: 3px;
-    }
     .save-btn a{
         padding: 20px 0px;
-        background-color: #0077b5; /* LinkedIn color */
         border-radius: 10px;
         color: white;
         text-decoration: none;
@@ -82,10 +75,10 @@
         margin: 3px;
         background-color: #189946;
     }
-    .social-share-buttons .twitter {
+    .social-share-buttons .restart {
         background-color: #1cad4f;
     }
-    .social-share-buttons .messages {
+    .social-share-buttons .profile-btn {
         background-color: #22c95d;
     }
 
@@ -95,7 +88,51 @@
         font-weight:100;
     }
 
-    @media (max-width: 400px) {
+    .twitter {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-left: 1vw;
+        margin-right:0.5vw;
+        padding-bottom:0px;
+        padding-top:10px;
+    }
+
+    .pinterest {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin:.25 vw;
+    }
+
+    .whatsapp {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    .twitter-img {
+        width: 4vw;
+        height: auto;
+    }
+
+    .pinterest-img {
+        width:50px;
+        height:50px;
+    }
+
+    .whatsapp-img {
+        width:60px;
+        height:60px;
+    }
+    @media screen and (max-width: 400px) {
+        body {
+            overflow: visible !important;
+        }
+        .final-summary-container > div {
+            flex: 1 1 50%;
+            min-width: 100px;
+        }
         .final-summary-container {
             margin-bottom: 70px;
         }
@@ -146,6 +183,13 @@
             margin-bottom: -20px;
             text-shadow: 0 1px 8x rgba(0, 0, 0, 0.9);
         }
+        h5 {
+            text-align: center;
+            font-size: 0.7em;
+            margin-top: 20px;
+            margin-bottom: -20px;
+            text-shadow: 0 1px 8x rgba(0, 0, 0, 0.9);
+        }
         ul li div span1 {
             margin-top: 5px;
             font-size: 1rem;
@@ -163,7 +207,6 @@
         }
         .save-btn a{
             padding: 5px 0px;
-            background-color: #0077b5; /* LinkedIn color */
             border-radius: 10px;
             color: white;
             text-decoration: none;
@@ -171,6 +214,33 @@
             font-size: 16px;
             margin: 3px;
             background-color: #189946;
+        }
+
+        .twitter {
+            margin:0px;
+            padding-bottom:0px;
+            padding-top:10px;
+            margin-left: 1vw;
+            margin-right: .5vh;
+        }
+
+        .pinterest {
+            margin: .5vw;
+        }
+
+        .twitter-img {
+            width: 40px;
+            height: 40px;
+        }
+
+        .pinterest-img {
+            width:35px;
+            height:35px;
+        }
+
+        .whatsapp-img {
+            width:40px;
+            height:40px;
         }
     }
 </style>
@@ -186,7 +256,7 @@
         <ul>
             {% for artist in top_artists|slice:":5" %}
             <li>
-                <img class="final-image" src="{{ artist.image_url }}" alt="{{ artist.name }}">
+                <img class="final-image" src="{{ artist.image_url }}" alt="{{ artist.name }}" loading="eager">
                 <div>#{{ forloop.counter }}. <span>{{ artist.name }}</span></div>
             </li>
             {% endfor %}
@@ -198,7 +268,7 @@
         <ul>
             {% for track in top_tracks|slice:":5" %}
             <li>
-                <img class="final-image" src="{{ track.image_url }}" alt="{{ track.name }}">
+                <img class="final-image" src="{{ track.image_url }}" alt="{{ track.name }}" loading="eager">
                 <div>#{{ forloop.counter }}. <span>{{ track.name }}</span>
                 </div>
             </li>
@@ -211,7 +281,7 @@
         <ul>
             {% for genre in top_genres %}
             <li>
-                <img class="final-image" src="{{ genre.image_url }}" alt="{{ genre.name }}">
+                <img class="final-image" src="{{ genre.image_url }}" alt="{{ genre.name }}" loading="eager">
                 <div>#{{ forloop.counter }}. <span>{{ genre.name }}</span></div>
             </li>
             {% endfor %}
@@ -231,69 +301,134 @@
                 <div><span style="font-weight:600; margin-bottom:-20px;">Peak Listening Time <br>of the Day: </span><br><span1>{{ peak_listening_time_of_day }}</span1></div>
             </li>
             <li>
+                <h5>Share:</h5>
+                <button class="twitter" onclick="shareOnTwitter('{{ screenshot.absolute_url }}')">
+                    <svg class="twitter-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+                        <path fill="#1D9BF0" d="M24.45 8.55c.01.23.01.46.01.69 0 7.02-5.33 15.07-15.08 15.07-3.02 0-5.84-.88-8.22-2.37.42.05.86.07 1.3.07 2.53 0 4.86-.85 6.72-2.27-2.37-.04-4.39-1.61-5.08-3.77.33.07.67.11 1.02.11.5 0 .98-.07 1.44-.2-2.48-.5-4.36-2.67-4.36-5.28v-.07c.74.41 1.58.65 2.48.68-1.46-1.05-2.43-2.84-2.43-4.85 0-1.07.29-2.07.79-2.94 2.87 3.53 7.14 5.86 11.96 6.1-.1-.42-.16-.86-.16-1.3 0-3.14 2.55-5.69 5.69-5.69 1.63 0 3.1.69 4.14 1.78 1.29-2.56-.11-5.72-2.72-7.2 1.27-.24 2.48-.71 3.58-1.35-1.02 1.27-2.31 2.36-3.79 3.04z"/>
+                    </svg>
+                </button>
+                <button class="pinterest" onclick="shareOnPinterest('{{ screenshot.absolute_url }}')">
+                    <img class="pinterest-img" src="https://upload.wikimedia.org/wikipedia/commons/0/08/Pinterest-logo.png" alt="Share on Pinterest">
+                </button>
+                <button class="whatsapp" onclick="shareOnWhatsApp('{{ imageUrl }}')">
+                    <img class="whatsapp-img" src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Share on WhatsApp">
+                </button>
+            </li>
+            <li>
                 <div class="save-btn">
                     <a id="save-wrapped-btn">Save Your Wrapped!</a>
                 </div>
                 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
             </li>
-            <li>
-                <div class="social-share-buttons">
-                    <!-- X (Twitter) Share Button -->
-                    <a href="https://twitter.com/intent/tweet?url=http://127.0.0.1:8000/final-summary/&text=Check%20out%20my%20Spotify%20Year%20in%20Review!" target="_blank" class="twitter">
-                        Share on X (Twitter)
-                    </a>
-
-                    <!-- Instagram: Direct link to Instagram page (no direct sharing) -->
-                    <a href="https://wa.me/?text=Check%20out%20my%20Spotify%20Year%20in%20Review%3A%20http://127.0.0.1:8000/final-summary/" target="_blank" class="messages">
-                        Share on WhatsApp
-                    </a>
-
-                </div>
-            </li>
         </ul>
     </div>
 </div>
+<div class="button-container">
+    <!-- Previous Button -->
+    <a href="{% url 'spotify_app:listening_habits' %}" class="btn-prev1">Previous</a>
+    <!-- Next Button -->
+    <a href="{% url 'spotify_app:my_wraps' %}" class="btn-next1">My Wraps</a>
+</div>
+
 </body>
-<a href="{% url 'spotify_app:listening_habits' %}" class="btn-prev">Previous</a>
-<!-- Next Button -->
-<a href="{% url 'spotify_app:my_wraps' %}" class="btn-next">My Wraps</a>
 
 <script src="https://cdn.jsdelivr.net/npm/dom-to-image@2.6.0/dist/dom-to-image.min.js"></script>
 <script>
     document.getElementById("save-wrapped-btn").addEventListener("click", function (event) {
-        event.preventDefault();
-        const node = document.querySelector(".final-summary");
+    event.preventDefault();
 
-        domtoimage.toBlob(node)
-            .then(function (blob) {
-                const formData = new FormData();
-                formData.append("image", blob, "wrapped_summary.png");
+    // Temporarily adjust the page to ensure all content is visible
+    document.body.style.overflow = 'visible';
 
-                fetch("{% url 'spotify_app:save_screenshot' %}", {
-                    method: "POST",
-                    headers: {
-                        "X-CSRFToken": "{{ csrf_token }}"
-                    },
-                    body: formData
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert("Your Wrapped is Saved! View it in your Profile Page!");
+    const node = document.querySelector(".final-summary");
 
-                            // Optionally, you could store the image URL in the local storage or a session
-                            // For now, we'll redirect to the my_wraps.html page with the new image URL
-                            window.location.href = "{% url 'spotify_app:my_wraps' %}";
-                        } else {
-                            alert("Error saving screenshot.");
-                        }
-                    })
-                    .catch(error => console.error("Error:", error));
+    domtoimage.toBlob(node)
+        .then(function (blob) {
+            // Reset page overflow
+            document.body.style.overflow = '';
+
+            const formData = new FormData();
+            formData.append("image", blob, "wrapped_summary.png");
+
+            fetch("{% url 'spotify_app:save_screenshot' %}", {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}"
+                },
+                body: formData
             })
-            .catch(error => console.error("Screenshot error:", error));
-    });
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert("Your Wrapped is Saved!");
+                        window.location.href = "{% url 'spotify_app:my_wraps' %}";
+                    } else {
+                        alert("Error saving screenshot.");
+                    }
+                })
+                .catch(error => console.error("Error:", error));
+        })
+        .catch(error => console.error("Screenshot error:", error));
+});
 
+function shareOnPinterest(imageUrl) {
+        // Collect the top artists names and apply the escapejs filter to prevent HTML encoding
+        const artistNames = "{% for artist in top_artists %}{{ forloop.counter }}. {{ artist.name|escapejs }}{% if not forloop.last %}\n{% endif %}{% endfor %}";
 
+        // Collect the top tracks names and apply the escapejs filter to prevent HTML encoding
+        const trackNames = "{% for track in top_tracks %}{{ forloop.counter }}. {{ track.name|escapejs }}{% if not forloop.last %}\n{% endif %}{% endfor %}";
+
+        // Collect the top genres names and apply the escapejs filter to prevent HTML encoding
+        const genreNames = "{% for genre in top_genres %}{{ forloop.counter }}. {{ genre.name|escapejs }}{% if not forloop.last %}\n{% endif %}{% endfor %}";
+
+        // Combine all sections in the Pinterest description
+        const pinterestDescription = `Check out my Spotify Wrapped! \n🔥 Top 5 Artists:\n${artistNames}\n\n🔥 Top 5 Tracks:\n${trackNames}\n\n🔥 Top 5 Genres:\n${genreNames}`;
+
+        // Ensure the imageUrl is a valid URL to the image to be shared
+        const pinterestShareUrl = `https://pinterest.com/pin/create/button/?url=${encodeURIComponent(window.location.href)}&media=${encodeURIComponent(imageUrl)}&description=${encodeURIComponent(pinterestDescription)}`;
+
+        // Open Pinterest share dialog with the constructed URL
+        window.open(pinterestShareUrl, '_blank');
+    }
+
+    function shareOnTwitter(imageUrl) {
+        // Collect the top artists names and apply the escapejs filter to prevent HTML encoding
+        const artistNames = "{% for artist in top_artists %}{{ forloop.counter }}. {{ artist.name|escapejs }}{% if not forloop.last %}\n{% endif %}{% endfor %}";
+
+        // Collect the top tracks names and apply the escapejs filter to prevent HTML encoding
+        const trackNames = "{% for track in top_tracks %}{{ forloop.counter }}. {{ track.name|escapejs }}{% if not forloop.last %}\n{% endif %}{% endfor %}";
+
+        // Collect the top genres names and apply the escapejs filter to prevent HTML encoding
+        const genreNames = "{% for genre in top_genres %}{{ forloop.counter }}. {{ genre.name|escapejs }}{% if not forloop.last %}\n{% endif %}{% endfor %}";
+
+        // Combine all sections in the tweet text
+        const twitterText = `Check out my Spotify Wrapped! \n🔥 Top 5 Artists:\n${artistNames}\n\n🔥 Top 5 Tracks:\n${trackNames}\n\n🔥 Top 5 Genres:\n${genreNames}`;
+
+        // Prepare the Twitter share URL
+        const twitterShareUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(twitterText)}&media=${encodeURIComponent(imageUrl)}`;
+
+        // Open Twitter share dialog
+        window.open(twitterShareUrl, '_blank');
+    }
+    function shareOnWhatsApp(imageUrl) {
+        // Collect the top artists names and apply the escapejs filter to prevent HTML encoding
+        const artistNames = "{% for artist in top_artists %}{{ forloop.counter }}. {{ artist.name|escapejs }}{% if not forloop.last %}\n{% endif %}{% endfor %}";
+
+        // Collect the top tracks names and apply the escapejs filter to prevent HTML encoding
+        const trackNames = "{% for track in top_tracks %}{{ forloop.counter }}. {{ track.name|escapejs }}{% if not forloop.last %}\n{% endif %}{% endfor %}";
+
+        // Collect the top genres names and apply the escapejs filter to prevent HTML encoding
+        const genreNames = "{% for genre in top_genres %}{{ forloop.counter }}. {{ genre.name|escapejs }}{% if not forloop.last %}\n{% endif %}{% endfor %}";
+
+        // Combine all sections in the WhatsApp text
+        const whatsappText = `Check out my Spotify Wrapped! \nTop 5 Artists:\n${artistNames}\n\nTop 5 Tracks:\n${trackNames}\n\Top 5 Genres:\n${genreNames}`;
+
+        // Prepare the WhatsApp share URL
+        const whatsappShareUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(whatsappText)}%0A%0A${encodeURIComponent(imageUrl)}`;
+
+        // Open WhatsApp share dialog
+        window.open(whatsappShareUrl, '_blank');
+    }
 </script>
 
 {% endblock %}
