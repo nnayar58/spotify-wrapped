@@ -13,6 +13,7 @@ Make sure you have the following installed:
 - **Python 3.13 or higher**
 - **PostgreSQL**
 - **Git**
+- **Ngrok (For Mobile Use)**
 
 ### 1. **Clone the Repository**
 
@@ -119,6 +120,19 @@ http://127.0.0.1:8000/
 
 Click "Connect to Spotify" on the home page to authenticate your Spotify account and view your listening statistics.
 
+## For Mobile Use
+To access on a mobile device, download Ngrok.
+Instead of starting the server with "python manage.py runserver", run:
+```bash
+python manage.py runserver 0.0.0.0:8000
+```
+In a different terminal, run either a random or custom domain:
+```bash
+ngrok http 8000
+```
+On your mobile device, open your web browser and go to the domain generated 
+(https:// [random-domain] .ngrok-free.app)
+
 ## 🛠 Troubleshooting
 
 - **Issue:** `django.core.exceptions.ImproperlyConfigured: You're using the staticfiles app without having set the STATIC_ROOT setting to a filesystem path.`
@@ -134,3 +148,4 @@ Click "Connect to Spotify" on the home page to authenticate your Spotify account
 
 - All static files are ignored in version control as specified in the `.gitignore` file.
 - The database username and password are standardized for consistency across development environments.
+

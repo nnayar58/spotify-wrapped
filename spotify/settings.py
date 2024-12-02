@@ -51,6 +51,17 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_URL = '/login2'  # Redirect to login page if not authenticated
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ngrok-free.app",
+    "http://*.ngrok-free.app",
+    "https://usable-stingray-simple.ngrok-free.app/",
+    "http://usable-stingray-simple.ngrok-free.app/",
+]
+
+SESSION_COOKIE_SECURE = False  # Set to True if using HTTPS consistently
+CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS consistently
+SESSION_COOKIE_SAMESITE = None
+CSRF_COOKIE_SAMESITE = None
 
 # Application definition
 

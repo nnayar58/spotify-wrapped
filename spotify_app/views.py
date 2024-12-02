@@ -84,6 +84,8 @@ def spotify_callback(request):
     return redirect("spotify_app:profile")
 
 
+import logging
+
 def refresh_access_token(user_profile):
     token_url = "https://accounts.spotify.com/api/token"
     data = {
@@ -95,11 +97,27 @@ def refresh_access_token(user_profile):
     response = requests.post(token_url, data=data)
     token_info = response.json()
 
-    # Update the access token and expiration time
-    user_profile.access_token = token_info.get('access_token')
-    expires_in = token_info.get('expires_in')
+    # Log the response for debugging
+    logging.debug(f"Spotify token refresh response: {token_info}")
+
+    # Handle errors from the response
+    if response.status_code != 200:
+        logging.error(f"Failed to refresh Spotify token: {token_info}")
+        raise Exception("Failed to refresh access token.")
+
+    # Ensure access_token and expires_in are present
+    access_token = token_info.get('access_token')
+    expires_in = token_info.get('expires_in', 3600)
+
+    if not access_token or not expires_in:
+        logging.error(f"Missing access token or expiration info: {token_info}")
+        raise Exception("Invalid response from Spotify API.")
+
+    # Update the user's profile
+    user_profile.access_token = access_token
     user_profile.token_expires = timezone.now() + timedelta(seconds=expires_in)
     user_profile.save()
+
 
 def get_spotify_data(url, user_profile):
     # Refresh the access token if it has expired
