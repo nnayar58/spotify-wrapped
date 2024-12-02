@@ -81,7 +81,7 @@ def spotify_callback(request):
     user_profile.token_expires = token_expires
     user_profile.save()
 
-    return redirect("spotify_app:top_genres")
+    return redirect("spotify_app:profile")
 
 
 def refresh_access_token(user_profile):

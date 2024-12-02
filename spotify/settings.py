@@ -49,7 +49,7 @@ ALLOWED_HOSTS = ['*']
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-LOGIN_URL = '/accounts/login/'  # Redirect to login page if not authenticated
+LOGIN_URL = '/login2'  # Redirect to login page if not authenticated
 
 
 # Application definition
